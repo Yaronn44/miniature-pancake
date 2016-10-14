@@ -12,7 +12,7 @@ public class Cellule extends JPanel {
 		case_ = 0;
 		etoile_ = false;
 		setBackground(Color.white);
-		setPreferredSize(new Dimension(70,70));
+		setPreferredSize(new Dimension(50,50));
 	}
 
 	public Cellule(int val, boolean base){
@@ -39,37 +39,49 @@ public class Cellule extends JPanel {
 	}
 
 	public boolean setVal(int val){
-		if (case_ == 0){
+		if (case_ == 0 && (val ==1 || val == 2)){
 			case_ = val;
+
+			if (val == 1) 
+				setBackground(Color.blue);
+			else
+				setBackground(Color.red);
+
 			return true;
 		}
 		return false;
 	}
 
 	public boolean setBase(int val){
-		if (case_ == 0){
+		if (case_ == 0 && (val ==1 || val == 2)){
 			case_ = val;
 			etoile_ = true;
+
+			if (val == 1) 
+				setBackground(Color.blue);
+			else
+				setBackground(Color.red);
+
 			return true;
 		}
 		return false;
 	}
 
-	public void colorerBase(int val){
+	public void colorerCase(int val){
 		if (!setVal(val)){
 
 			JFrame fenetre = new JFrame("Erreur");
 
 			fenetre.setSize(200,200);
 			fenetre.setLocationRelativeTo(null);
-			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   
+			fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
 			fenetre.setVisible(true);
 
 			JTextArea texte = new JTextArea("La case est déjà coloré !");
 			fenetre.getContentPane().add(texte);
 
 			JButton bouton = new JButton("OK");
-			bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {System.exit(0);}});
+			bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fenetre.dispose();}});
 			fenetre.add(bouton);
 
 		}
