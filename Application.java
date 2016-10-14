@@ -2,6 +2,11 @@
  * Classe applicative montrant un EXEMPLE de création d'une grille
  * et de son affichage dans une fenêtre graphique.
  */
+
+import java.awt.*;
+import javax.swing.*;
+import java.*;
+
 public class Application {
 
 	/**
@@ -11,20 +16,13 @@ public class Application {
 	public static void main(String[] args) {
 
 		// Création de la grille
-		Grille grille = new Grille(Constante.N,Constante.M);
+		Grille grille = new Grille(Constante.N);
 		
 		// Création et affichage de la fenêtre graphique
-		Fenetre fenetre = new Fenetre("Un monde de choses",grille);
-
-		// Entre deux évolutions d'un monde, il est nécessaire de faire une pause
-		// pour l'affichage au moyen du code suivant.
-		try {
-			Thread.sleep(Constante.pauseTempsMs);
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
+		Fenetre fenetre = new Fenetre("Un jeu de connexion",grille);
+		Menu menu = new Menu();
 	}
+
+
 
 }
