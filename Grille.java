@@ -13,6 +13,7 @@ public class Grille extends JPanel {
 	
 	private int taille_;					// Dimensions de la grille : 0..taille_ lignes et 0..taille_ colonnes
 	private int dim_; 						// Dimensions de la fenêtre d'affichage en pixels
+	private Cellule tab[][];
 
 
 	public Grille(int t) {
@@ -21,7 +22,7 @@ public class Grille extends JPanel {
 		taille_ = t;   						// dimensions pour les positions
 		dim_ = Constante.Pix*(taille_);		// dimensions de la fenêtre
 
-		Cellule tab[][] = new Cellule[taille_][taille_];
+		tab = new Cellule[taille_][taille_];
 
 
 		//setPreferredSize(new Dimension(dim_,dim_));
@@ -39,6 +40,10 @@ public class Grille extends JPanel {
 
 	public int getDim() {
 		return dim_;
+	}
+
+	public Cellule getCell(int x, int y){
+		return tab[x/50][(y-63)/50];
 	}
 
 	public void dessiner() {

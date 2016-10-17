@@ -14,13 +14,9 @@ public class Application {
 	 * @param args Paramètre non utilisé
 	 */
 	public static void main(String[] args) {
-
-		// Création de la grille
-		Grille grille = new Grille(Constante.N);
 		
 		// Création et affichage de la fenêtre graphique
-		Fenetre fenetre = new Fenetre("Un jeu de connexion",grille);
-		Menu menu = new Menu();
+		Fenetre fenetre = new Fenetre("Un jeu de connexion");
 	}
 
 
