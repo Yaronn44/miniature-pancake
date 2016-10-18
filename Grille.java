@@ -43,7 +43,7 @@ public class Grille extends JPanel {
 	}
 
 	public Cellule getCell(int x, int y){
-		return tab[x/50][(y-63)/50];
+		return tab[(x-2)/50][(y-34)/50];
 	}
 
 	public void dessiner() {
