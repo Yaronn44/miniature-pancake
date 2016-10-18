@@ -24,10 +24,9 @@ public class Grille extends JPanel {
 
 		tab = new Cellule[taille_][taille_];
 
-
-		//setPreferredSize(new Dimension(dim_,dim_));
 		setBackground(Color.BLACK);
 		setLayout(new GridLayout(taille_,taille_,2,2));
+		setPreferredSize(new Dimension(dim_,dim_));
 
 
 		for (int y = 0; y < taille_; y++) {

@@ -16,62 +16,68 @@ class ClassA{
  * Classe dont les instances sont des fenêtres graphiques
  * dérivées de JFrame.
  */
-public class Fenetre extends JFrame {
+public class Fenetre extends JFrame{
 	
 	/**
 	 * Construteur.
 	 * @param titre Titre de la fenêtre afficé dans le bandeau
 	 * @param panel Contenu de la fenêtre
 	 */
+
+	private Grille grille;
+	private JPanel menu;
+	private JButton b1, b2, b3, b4, b5, b6, b7, b8;
+	private boolean joue; 
+	private int j1;
+
+
 	public Fenetre(String titre) {
 
 		//---------------------------------------------------- Instanciation de la fenêtre principale et de son contenu
 		super(titre);
-		Grille grille = new Grille(Constante.N);
-		getContentPane().add(grille);
+		grille = new Grille(Constante.N);
+		menu = new JPanel();
+		joue = false;
+		j1 = 1;
 
 		//---------------------------------------------------- Paramétrage de la fenêtre principale
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
-		setLocation(500,200);
+		setLocationRelativeTo(null);
 		setVisible(true);
-		pack();
-
-		
-		//---------------------------------------------------- Instanciation du menu
-		JFrame menu = new JFrame("Menu");
+		setLayout(new GridLayout(1,2)); // CHANGER PAR GROUPLAYOUT
 
 		//---------------------------------------------------- Paramétrage du menu
 		menu.setLayout(new GridLayout(8,1));
-		menu.setSize(300,400);
-		menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menu.setResizable(true);
-		menu.setLocation(120, 120);
 		menu.setVisible(true);
+		menu.setPreferredSize(new Dimension(0,grille.getDim()));
 
-		//---------------------------------------------------- Instanciation du contenu du menu
-		JButton b1 = new JButton("Colorer une case");
-		JButton b2 = new JButton("Afficher composante");
-		JButton b3 = new JButton("Existe chemin cases");
-		JButton b4 = new JButton("Relier Case Min");
-		JButton b5 = new JButton("Nombre d'étoiles");
-		JButton b6 = new JButton("Afficher le score");
-		JButton b7 = new JButton("Relie composante ?");
-		JButton b8 = new JButton("Nouvelle partie");
+		//---------------------------------------------------- Instanciation et paramétrage du contenu du menu
+		b1 = new JButton("Colorer une case");
+		b2 = new JButton("Afficher composante");
+		b3 = new JButton("Existe chemin cases");
+		b4 = new JButton("Relier Case Min");
+		b5 = new JButton("Nombre d'étoiles");
+		b6 = new JButton("Afficher le score");
+		b7 = new JButton("Relie composante ?");
+		b8 = new JButton("Nouvelle partie");
 
-		boolean joue = false;
 
 		b1.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
-				if (!joue) {
-					//joue = true;
+				if (!joue){
+					joue = true;
 					addMouseListener(new MouseAdapter(){
-		        		public void mousePressed(MouseEvent e){
-		        			grille.getCell(e.getX(),e.getY()).colorerCase(1);
-		        			System.out.println(e.getX()+"   "+e.getY());
+        				public void mousePressed(MouseEvent e){
+		        			grille.getCell(e.getX(),e.getY()).colorerCase(j1);
 		        			removeMouseListener(this);
-		        		}
-		        	});
+		        			if (j1 == 1) 
+		        				++j1;
+		        			else
+		        				--j1;
+		        			joue = false;
+        				}
+	        		});
 		        }
 			}
         });
@@ -92,7 +98,6 @@ public class Fenetre extends JFrame {
         b8.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent a){
         		dispose();
-        		menu.dispose();
         		Fenetre f = new Fenetre(titre);
         	}
         });
@@ -105,8 +110,13 @@ public class Fenetre extends JFrame {
 		menu.add(b6);
 		menu.add(b7);
 		menu.add(b8);
-	}
 
+		add(grille);
+		add(menu);
+		pack();
+
+		System.out.println(grille.getCell(1,1).getPreferredSize().getHeight());
+	}
 
 
 	public void nombreEtoile(){
@@ -117,6 +127,4 @@ public class Fenetre extends JFrame {
 		JTextArea scoreJ1 = new JTextArea("Le joueur 1 à : " + " points.");
 		JTextArea scoreJ2 = new JTextArea("Le joueur 2 à : " + " points.");
 	}
-
-
 }

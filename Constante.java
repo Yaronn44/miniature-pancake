@@ -16,6 +16,6 @@ public class Constante {
 	/**
 	 * Un point (x,y) est affiché sur le pixel ((x+1)*Pix, (y+1)*Pix)
 	 */
-	public static final int Pix = 70;	
+	public static final int Pix = 50;	
 
 }
