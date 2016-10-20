@@ -17,6 +17,7 @@ public class Application {
 		
 		// Création et affichage de la fenêtre graphique
 		Fenetre fenetre = new Fenetre("Un jeu de connexion");
+		fenetre.repaint();
 	}
 
 

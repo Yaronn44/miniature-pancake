@@ -20,35 +20,43 @@ public class Grille extends JPanel {
 
 		
 		taille_ = t;   						// dimensions pour les positions
-		dim_ = Constante.Pix*(taille_);		// dimensions de la fenêtre
+		dim_ = 50*(taille_);				// dimensions de la fenêtre
 
 		tab = new Cellule[taille_][taille_];
+		Dimension d = new Dimension(dim_, dim_);
 
-
-		//setPreferredSize(new Dimension(dim_,dim_));
 		setBackground(Color.BLACK);
-		setLayout(new GridLayout(taille_,taille_,2,2));
+		setPreferredSize(d);
+		GridLayout layout = new GridLayout(taille_, taille_,2 ,2);
+		setLayout(layout);
+		
 
-
-		for (int y = 0; y < taille_; y++) {
+		for (int y = 0; y < taille_; ++y) {
 			for (int x = 0; x<taille_; ++x) {
 				tab[x][y] = new Cellule();
 				add(tab[x][y]);
 			}
 		}
+
+		tab[0][0].setBase(1);
+		tab[9][9].setBase(2);
 	}
+
 
 	public int getDim() {
 		return dim_;
 	}
 
+
 	public Cellule getCell(int x, int y){
-		return tab[(x-2)/50][(y-34)/50];
+		return tab[(x-1)/50][(y-1)/50];
 	}
+
 
 	public void dessiner() {
 		repaint();  // appel de paintComponent redéfinie ci-après
 	}
+
 
 	public void afficheComposante(){
 
