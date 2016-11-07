@@ -24,8 +24,12 @@ public class Cellule extends JPanel {
 		else if(case_ == 2)
 			setBackground(Color.red);
 
-		JLabel texte = new JLabel();
-		texte.setText("*");
+
+		// Affichage de l'étoile dans les bases
+		setPreferredSize(new Dimension(50,50));
+		JLabel texte = new JLabel("*");
+		texte.setFont(new Font("Serif", Font.BOLD, 20));
+		texte.setForeground(Color.BLACK);
 		add(texte);
 	}
 
@@ -38,8 +42,8 @@ public class Cellule extends JPanel {
 		return etoile_;
 	}
 
-	public boolean setVal(int val){
-		if (case_ == 0 && (val ==1 || val == 2)){
+	public boolean colorerCase(int val){ 			
+		if (case_ == 0 && (val == 1 || val == 2)){
 			case_ = val;
 
 			if (val == 1) 
@@ -62,29 +66,33 @@ public class Cellule extends JPanel {
 			else
 				setBackground(Color.red);
 
+			JLabel texte = new JLabel("*");
+			Font font = new Font("Serif", Font.BOLD, 20);
+			texte.setFont(font);
+			texte.setForeground(Color.BLACK);
+			add(texte);
+
 			return true;
 		}
 		return false;
 	}
 
-	public void colorerCase(int val){
-		if (!setVal(val)){
+	public boolean testVal(int val){
+		if (!colorerCase(val)){
 
 			JFrame fenetre = new JFrame("Erreur");
 
-			fenetre.setSize(200,200);
+			fenetre.setSize(200,100);
 			fenetre.setLocationRelativeTo(null);
 			fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
 			fenetre.setVisible(true);
 
-			JTextArea texte = new JTextArea("La case est déjà coloré !");
-			fenetre.getContentPane().add(texte);
-
-			JButton bouton = new JButton("OK");
+			JButton bouton = new JButton("La case est déjà coloré !");
 			bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fenetre.dispose();}});
 			fenetre.add(bouton);
 
+			return false;
 		}
+		return true;
 	}
-
 }
