@@ -168,9 +168,11 @@ public class Fenetre extends JFrame{
     			if (test) {
 
     				int tmp = grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, j1);
-    				System.out.println(tmp);
-    				for (int i = 0; i < tmp; ++i)
-    					grille.union((e.getX()-1)/50, (e.getY()-1)/50, j1);
+    				if (tmp != 1) {
+    					for (int i = 0; i < tmp; ++i)
+    						grille.union((e.getX()-1)/50, (e.getY()-1)/50, j1);
+    				}
+
 
         			if (j1 == 1) 
         				++j1;
