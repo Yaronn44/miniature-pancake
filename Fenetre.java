@@ -42,6 +42,7 @@ public class Fenetre extends JFrame{
 		b2 = new JButton("Relie Composante");
 		b3 = new JButton("Connaitre Composante");
 		b4 = new JButton("Connaitre Val");
+		b5 = new JButton("Afficher Composante");
 		b7 = new JButton("Get Coordonnée");
 		b8 = new JButton("Nouvelle partie");
 
@@ -89,6 +90,7 @@ public class Fenetre extends JFrame{
 			}
         });
 
+
         b4.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -101,6 +103,21 @@ public class Fenetre extends JFrame{
 		        });
 			}
         });
+
+
+        b5.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a) {
+				suppr();
+				grille.addMouseListener(new MouseAdapter(){
+		        		public void mousePressed(MouseEvent e){
+		    				grille.afficheComposante((e.getX()-1)/50, (e.getY()-1)/50);
+		    				suppr();
+		    				jouer();
+		        		}
+		        });
+			}
+        });
+
 
         b7.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
@@ -115,6 +132,7 @@ public class Fenetre extends JFrame{
 			}
         });
 
+
         b8.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent a){
         		dispose();
@@ -127,6 +145,7 @@ public class Fenetre extends JFrame{
 		menu.add(b2);
 		menu.add(b3);
 		menu.add(b4);
+		menu.add(b5);
 		menu.add(b7);
 		menu.add(b8);
 
@@ -156,10 +175,37 @@ public class Fenetre extends JFrame{
 		pack();
 	}
 
+
 	public void afficheScore(){
-		JTextArea scoreJ1 = new JTextArea("Le joueur 1 à : " + " points.");
-		JTextArea scoreJ2 = new JTextArea("Le joueur 2 à : " + " points.");
+
+		int scoreJ1 = 0;
+		int scoreJ2 = 0;
+		int tmpJ1 = -1;
+		int tmpJ2 = -1;
+
+		for (int k = 0; k < grille.getTaille(); ++k) {
+			for (int l = 0; l <= grille.getTaille();  ++l) {
+				if (grille.getVal(l,k) == 1 && grille.getComp(l,k) != tmpJ1){
+					if (grille.nombreEtoiles(l,k) > scoreJ1){
+						scoreJ1 = grille.nombreEtoiles(l,k);
+						tmpJ1 = grille.getComp(l,k);
+					}
+				}
+
+				if (grille.getVal(l,k) == 2 && grille.getComp(l,k) != tmpJ2){
+					if (grille.nombreEtoiles(l,k) > scoreJ2){
+						scoreJ2 = grille.nombreEtoiles(l,k);
+						tmpJ2 = grille.getComp(l,k);
+					}
+				}
+			}
+		}
+
+		JTextArea J1 = new JTextArea("Le joueur 1 à : " + scoreJ1 + " points.");
+		JTextArea J2 = new JTextArea("Le joueur 2 à : " + scoreJ2 + " points.");
+
 	}
+
 
 	public void jouer(){
 		grille.addMouseListener(new MouseAdapter(){
@@ -168,10 +214,8 @@ public class Fenetre extends JFrame{
     			if (test) {
 
     				int tmp = grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, j1);
-    				if (tmp != 1) {
-    					for (int i = 0; i < tmp; ++i)
-    						grille.union((e.getX()-1)/50, (e.getY()-1)/50, j1);
-    				}
+    				for (int i = 0; i < tmp; ++i)
+    					grille.union((e.getX()-1)/50, (e.getY()-1)/50, j1);
 
 
         			if (j1 == 1) 

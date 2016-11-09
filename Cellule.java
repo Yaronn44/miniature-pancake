@@ -43,17 +43,28 @@ public class Cellule extends JPanel {
 	}
 
 	public boolean colorerCase(int val){ 			
-		if (case_ == 0 && (val == 1 || val == 2)){
+		if (case_ == 0 && (val == 1 || val == 2 || val == 3)){
 			case_ = val;
 
 			if (val == 1) 
 				setBackground(Color.blue);
-			else
+			else if(val == 2)
 				setBackground(Color.red);
+			else
+				setBackground(Color.green);
 
 			return true;
 		}
 		return false;
+	}
+
+	public void colorerTemp(){
+		if (getBackground() != Color.green)
+			setBackground(Color.green);
+		else if(case_ == 1)
+			setBackground(Color.blue);
+		else
+			setBackground(Color.red);
 	}
 
 	public boolean setBase(int val){

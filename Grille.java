@@ -3,6 +3,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.*;
 
+
 /**
  * Grille d'un monde gérant l'ensemble des positions libres
  * ou occupées par des choses.
@@ -45,9 +46,9 @@ public class Grille extends JPanel {
 
 			int nb1 = (int)(Math.random() * taille_);
 			int nb2 = (int)(Math.random() * taille_);
-			System.out.println(nb1+"  " + nb2);
 
-			while(nb2 == nb1){
+			while(tab_[nb1][nb2].getVal() != 0) {
+				nb1 = (int)(Math.random() * taille_);
 				nb2 = (int)(Math.random() * taille_);
 			}
 
@@ -59,7 +60,8 @@ public class Grille extends JPanel {
 			int nb1 = (int)(Math.random() * taille_);
 			int nb2 = (int)(Math.random() * taille_);
 
-			while(nb2 == nb1){
+			while(tab_[nb1][nb2].getVal() != 0) {
+				nb1 = (int)(Math.random() * taille_);
 				nb2 = (int)(Math.random() * taille_);
 			}
 
@@ -145,14 +147,29 @@ public class Grille extends JPanel {
 
 	public void afficheComposante(int x, int y){						// x et y les coordonnées de la Cellule dans le tableau 
 		if (tab_[x][y].getVal() != 0) {
-			for (int l = 0; l < taille_; ++l) {
-				for (int k = 0; k < taille_; ++k) {
-					if (classe_.classe(k, l) == classe_.classe(x, y)){
 
-					}
-						// AFFICHAGE EN SURBRILLANCE DES CASES CONCERNEES
-				}
-			}
+			java.util.Timer t = new java.util.Timer();
+
+			class MonAction extends TimerTask {
+
+				int nbRep = 6;
+
+			    public void run() {
+			    	if(nbRep > 0){
+				    	for (int k = 0; k < taille_; ++k) {
+					     	for (int l = 0; l < taille_; ++l) {
+					     		if (classe_.classe(l, k) == classe_.classe(x, y))
+					     			tab_[l][k].colorerTemp();
+					     	}
+				     	}
+				     	--nbRep;
+				    }
+				    else
+				    	t.cancel();
+		      	}
+		    }
+
+		    t.scheduleAtFixedRate(new MonAction(),0, 1000);
 		}
 	}
 	
@@ -163,31 +180,32 @@ public class Grille extends JPanel {
 	**/
 	public int relieComposante(int x, int y, int c){				// x et y les coordonnées de la Cellule dans le tableau 
 
-			if (x == 0){
-				if( y == 0)
-					return compTest(y, x, y, x, y+1, x+1, c);
-				else if(y == taille_-1)
-					return compTest(y, x, y-1, x, y, x+1, c);
-				else 
-					return compTest(y, x, y-1, x, y+1, x+1, c);	
-			}
-			else if (x == taille_ - 1){
-				if( y == 0)
-					return compTest(y, x, y, x-1, y+1, x, c);
-				else if(y == taille_-1)
-					return compTest(y, x, y-1, x-1, y, x, c);
-				else 
-					return compTest(y, x, y-1, x-1, y+1, x, c);
-			}
-			else{
-				if( y == 0)
-					return compTest(y, x, y, x-1, y+1, x+1, c);
-				else if(y == taille_-1)
-					return compTest(y, x, y-1, x-1, y, x+1, c);
-				else 
-					return compTest(y, x, y-1, x-1, y+1, x+1, c);
-			}
+		if (x == 0){
+			if( y == 0)
+				return compTest(y, x, y, x, y+1, x+1, c);
+			else if(y == taille_-1)
+				return compTest(y, x, y-1, x, y, x+1, c);
+			else 
+				return compTest(y, x, y-1, x, y+1, x+1, c);	
+		}
+		else if (x == taille_ - 1){
+			if( y == 0)
+				return compTest(y, x, y, x-1, y+1, x, c);
+			else if(y == taille_-1)
+				return compTest(y, x, y-1, x-1, y, x, c);
+			else 
+				return compTest(y, x, y-1, x-1, y+1, x, c);
+		}
+		else{
+			if( y == 0)
+				return compTest(y, x, y, x-1, y+1, x+1, c);
+			else if(y == taille_-1)
+				return compTest(y, x, y-1, x-1, y, x+1, c);
+			else 
+				return compTest(y, x, y-1, x-1, y+1, x+1, c);
+		}
 	}
+
 
 	public int compTest(int y, int x, int y1, int x1, int y2, int x2, int c){
 
@@ -204,7 +222,7 @@ public class Grille extends JPanel {
 		}
 
 		int tmp = -1;
-		int compt = 1;
+		int compt = 0;
 
 		for (int k = y1; k <= y2; ++k) {
 			for (int l = x1; l <= x2;  ++l) {
@@ -215,11 +233,13 @@ public class Grille extends JPanel {
 				if (tab_[l][k].getVal() == c && tmp == -1)
 					tmp = classe_.classe(l,k);
 
-
 				if (tab_[l][k].getVal() == c && classe_.classe(l,k) != tmp) 
 					compt++;
 			}
 		}
+		if (tmp != -1)
+			compt += 1;
+
 		return compt;
 	}
 
@@ -230,7 +250,7 @@ public class Grille extends JPanel {
 
 		for (int k = 0; k < taille_; ++k) {
 			for (int l = 0; l < taille_;  ++l) {
-				if(classe_.classe(k,l) == classe_.classe(x,y) && tab_[k][l].isBase())
+				if(classe_.classe(l,k) == classe_.classe(x,y) && tab_[l][k].isBase())
 					++compt;
 			}
 		}
