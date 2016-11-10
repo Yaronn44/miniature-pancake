@@ -48,7 +48,7 @@ public class Fenetre extends JFrame{
 
 		jouer();
 
-		
+		// NB ETOILES
 		b1.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -57,12 +57,13 @@ public class Fenetre extends JFrame{
 		    				System.out.println(grille.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50));
 		    				suppr();
 		    				jouer();
+		    				grille.afficher();
 		        		}
 		        });
 			}
         });
 
-
+		// RELIE COMPOSANTE
         b2.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -76,7 +77,7 @@ public class Fenetre extends JFrame{
 			}
         });
 
-
+        // CONNAITRE COMP
         b3.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -90,7 +91,7 @@ public class Fenetre extends JFrame{
 			}
         });
 
-
+        // CONNAITRE VAL
         b4.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -104,7 +105,7 @@ public class Fenetre extends JFrame{
 			}
         });
 
-
+        // AFFICHER
         b5.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
