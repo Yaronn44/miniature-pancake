@@ -4,26 +4,35 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 import java.*;
+import java.util.*;
 
 
 /**
  * Classe dont les instances sont des fenêtres graphiques
  * dérivées de JFrame.
  */
-public class Fenetre extends JFrame{
+class Fenetre extends JFrame{
 
 	private Grille grille;
 	private JPanel menu;
+	private JLabel affScoreJ1, affScoreJ2;
 	private JButton b1, b2, b3, b4, b5, b6, b7, b8;
-	private int j1;
+	private int j1, scoreJ1, scoreJ2, nbBase;
+	private ArrayList<Integer> listeCoup;
 
-	public Fenetre(String titre, int nbBase) {
+	public Fenetre(String titre, int nbB) {
 
 		//------------------------------------------------------------------- Instanciation de la fenêtre principale et de son contenu
 		super(titre);
-		grille = new Grille(Constante.N, nbBase);
+		grille = new Grille(Constante.N, nbB);
 		menu = new JPanel();
+		scoreJ1 = 0;
+		scoreJ2 = 0;
+		affScoreJ1 = new JLabel("Score joueur 1 : "+ scoreJ1);
+		affScoreJ2 = new JLabel("Score joueur 2 : "+ scoreJ2);
 		j1 = 1;
+		nbBase = nbB;
+		listeCoup = new ArrayList<Integer>();
 
 		//------------------------------------------------------------------- Paramétrage de la fenêtre principale
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,38 +47,24 @@ public class Fenetre extends JFrame{
 		menu.setPreferredSize(new Dimension(100,grille.getDim()));
 
 		//------------------------------------------------------------------- Instanciation et paramétrage du contenu du menu
-		b1 = new JButton("nb étoiles");
-		b2 = new JButton("Relie Composante");
-		b3 = new JButton("Connaitre Composante");
-		b4 = new JButton("Connaitre Val");
-		b5 = new JButton("Afficher Composante");
+		b1 = new JButton("Afficher Composante");
+		b2 = new JButton("Connaitre Composante");
+		b3 = new JButton("Connaitre Val");
+		b4 = new JButton("Nombre d'étoiles");
+		b5 = new JButton("");
+		b6 = new JButton("Relie Composante");
 		b7 = new JButton("Get Coordonnée");
 		b8 = new JButton("Nouvelle partie");
 
 		jouer();
 
-		// NB ETOILES
-		b1.addActionListener(new ActionListener(){
+		// afficheComposante
+        b1.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
 				grille.addMouseListener(new MouseAdapter(){
 		        		public void mousePressed(MouseEvent e){
-		    				System.out.println(grille.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50));
-		    				suppr();
-		    				jouer();
-		    				grille.afficher();
-		        		}
-		        });
-			}
-        });
-
-		// RELIE COMPOSANTE
-        b2.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent a) {
-				suppr();
-				grille.addMouseListener(new MouseAdapter(){
-		        		public void mousePressed(MouseEvent e){
-		    				System.out.println(grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, j1));
+		    				grille.afficheComposante((e.getX()-1)/50, (e.getY()-1)/50);
 		    				suppr();
 		    				jouer();
 		        		}
@@ -78,7 +73,7 @@ public class Fenetre extends JFrame{
         });
 
         // CONNAITRE COMP
-        b3.addActionListener(new ActionListener(){
+        b2.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
 				grille.addMouseListener(new MouseAdapter(){
@@ -92,7 +87,7 @@ public class Fenetre extends JFrame{
         });
 
         // CONNAITRE VAL
-        b4.addActionListener(new ActionListener(){
+        b3.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
 				grille.addMouseListener(new MouseAdapter(){
@@ -105,13 +100,27 @@ public class Fenetre extends JFrame{
 			}
         });
 
-        // AFFICHER
-        b5.addActionListener(new ActionListener(){
+		// nombreEtoile
+		b4.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
 				grille.addMouseListener(new MouseAdapter(){
 		        		public void mousePressed(MouseEvent e){
-		    				grille.afficheComposante((e.getX()-1)/50, (e.getY()-1)/50);
+		    				System.out.println(grille.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50));
+		    				suppr();
+		    				jouer();
+		        		}
+		        });
+			}
+        });
+
+		// RELIE COMPOSANTE
+        b6.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a) {
+				suppr();
+				grille.addMouseListener(new MouseAdapter(){
+		        		public void mousePressed(MouseEvent e){
+		    				System.out.println(grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, j1));
 		    				suppr();
 		    				jouer();
 		        		}
@@ -147,6 +156,7 @@ public class Fenetre extends JFrame{
 		menu.add(b3);
 		menu.add(b4);
 		menu.add(b5);
+		menu.add(b6);
 		menu.add(b7);
 		menu.add(b8);
 
@@ -159,6 +169,8 @@ public class Fenetre extends JFrame{
 		layout.setHorizontalGroup( 
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(affScoreJ1)
+					.addComponent(affScoreJ2)
 					.addComponent(grille))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(menu))
@@ -167,6 +179,10 @@ public class Fenetre extends JFrame{
 
 		layout.setVerticalGroup( 
 			layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(affScoreJ1))
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(affScoreJ2))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addComponent(grille) 
 					.addComponent(menu))
@@ -179,50 +195,71 @@ public class Fenetre extends JFrame{
 
 	public void afficheScore(){
 
-		int scoreJ1 = 0;
-		int scoreJ2 = 0;
-		int tmpJ1 = -1;
-		int tmpJ2 = -1;
-
-		for (int k = 0; k < grille.getTaille(); ++k) {
-			for (int l = 0; l <= grille.getTaille();  ++l) {
-				if (grille.getVal(l,k) == 1 && grille.getComp(l,k) != tmpJ1){
-					if (grille.nombreEtoiles(l,k) > scoreJ1){
-						scoreJ1 = grille.nombreEtoiles(l,k);
-						tmpJ1 = grille.getComp(l,k);
-					}
-				}
-
-				if (grille.getVal(l,k) == 2 && grille.getComp(l,k) != tmpJ2){
-					if (grille.nombreEtoiles(l,k) > scoreJ2){
-						scoreJ2 = grille.nombreEtoiles(l,k);
-						tmpJ2 = grille.getComp(l,k);
-					}
-				}
-			}
-		}
-
-		JTextArea J1 = new JTextArea("Le joueur 1 à : " + scoreJ1 + " points.");
-		JTextArea J2 = new JTextArea("Le joueur 2 à : " + scoreJ2 + " points.");
-
+		affScoreJ1.setText("Score joueur 1 : "+ scoreJ1);
+		affScoreJ2.setText("Score joueur 2 : "+ scoreJ2);
 	}
 
 
 	public void jouer(){
 		grille.addMouseListener(new MouseAdapter(){
-    		public void mousePressed(MouseEvent e){		     
-    			boolean test = grille.getCell(e.getX(),e.getY()).testVal(j1);
-    			if (test) {
+    		public void mousePressed(MouseEvent e){		 
+
+    			if (grille.getCell(e.getX(),e.getY()).testVal(j1)){								// colorerCase() s'effectue dans testVal()
+
+    				listeCoup.add((e.getX()-1)/50+((e.getY()-1)/50)*Constante.N);
 
     				int tmp = grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, j1);
+
     				for (int i = 0; i < tmp; ++i)
     					grille.union((e.getX()-1)/50, (e.getY()-1)/50, j1);
 
+ 					int scoreTmp = grille.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50);
 
-        			if (j1 == 1) 
+        			if (j1 == 1){
+
+        				if(scoreTmp > 1 && scoreTmp > scoreJ1){
+        					scoreJ1 = scoreTmp;
+        					afficheScore();
+        				}
+
         				++j1;
-        			else if(j1 == 2)
+        			}
+        			else if(j1 == 2){
+
+        				if(scoreTmp > 1 && scoreTmp > scoreJ2){
+        					scoreJ2 = scoreTmp;
+        					afficheScore();
+        				}
+
         				--j1;
+        			}
+
+        			if (scoreJ1 == nbBase || scoreJ2 == nbBase) {
+
+        				JFrame fin = new JFrame("Bravo !!");
+
+        				fin.setSize(400,100);
+        				fin.setLocationRelativeTo(null);
+        				fin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+        				fin.setVisible(true);
+
+        				JButton bouton = new JButton("Bravo le joueur n°"+(j1 == 1 ? 2 : 1) +" a remporté la partie !");
+        				bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fin.dispose();}});
+        				fin.add(bouton);
+        			}
+        			else if(listeCoup.size() == Constante.N*Constante.N - nbBase*2){
+
+        				JFrame fin = new JFrame("Hum....");
+
+        				fin.setSize(400,100);
+        				fin.setLocationRelativeTo(null);
+        				fin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+        				fin.setVisible(true);
+
+        				JButton bouton = new JButton("Et bien il semble que ce soit un match nul !");
+        				bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fin.dispose();}});
+        				fin.add(bouton);
+        			}
         		}
     		}
    		});

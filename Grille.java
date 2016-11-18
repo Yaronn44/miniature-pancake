@@ -10,7 +10,7 @@ import java.util.*;
  * 
  * TODO : à compléter.
  */
-public class Grille extends JPanel {
+class Grille extends JPanel {
 
 	
 	private int taille_;					// Dimensions de la grille : 0..taille_ lignes et 0..taille_ colonnes
@@ -40,6 +40,7 @@ public class Grille extends JPanel {
 			add(tab_[x]);
 		}
 
+
 		for (int i = 0; i < nbBase; ++i){
 
 			int nb1 = (int)(Math.random() * taille_);
@@ -52,6 +53,7 @@ public class Grille extends JPanel {
 
 			tab_[nb1+nb2*taille_].setBase(1);
 		}
+
 
 		for (int i = 0; i < nbBase; ++i){
 
@@ -93,9 +95,16 @@ public class Grille extends JPanel {
 		return classe_.classe(x,y);
 	}
 
-	public void afficher(){
-		classe_.afficher();	}
+	public void afficher(int x, int y){
+		System.out.println("Pere : "+classe_.classe(x,y));
 
+		int t = getComp(x,y);
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		tmp.addAll(classe_.getTousFils(t%taille_, t/taille_));
+		for (int i = 0; i < tmp.size(); ++i) {
+			System.out.println(tmp.get(i));
+		}
+	}
 
 
 	// ------------------------------------------ Méthode
@@ -145,11 +154,15 @@ public class Grille extends JPanel {
 	}
 
 
-	// DGFIOUGRZHIGROIGHZ GIO HJZIOGUHZIOGHZIOG
 	public void afficheComposante(int x, int y){						// x et y les coordonnées de la Cellule dans le tableau 
 		if (tab_[x+y*taille_].getVal() != 0) {
 
 			java.util.Timer t = new java.util.Timer();
+
+			int rac = getComp(x,y);
+			ArrayList<Integer> tmp = new ArrayList<Integer>();
+			tmp.addAll(classe_.getTousFils(rac%taille_,rac/taille_));
+			tmp.add(rac);
 
 			class MonAction extends TimerTask {
 
@@ -157,12 +170,9 @@ public class Grille extends JPanel {
 
 			    public void run() {
 			    	if(nbRep > 0){
-				    	for (int k = 0; k < taille_; ++k) {
-					     	for (int l = 0; l < taille_; ++l) {
-					     		if (classe_.classe(l, k) == classe_.classe(x, y))
-					     			tab_[l+k*taille_].colorerTemp();
-					     	}
-				     	}
+				    	for (int i = 0; i < tmp.size(); ++i) {
+				    		tab_[tmp.get(i)].colorerTemp();
+				    	}
 				     	--nbRep;
 				    }
 				    else
@@ -245,17 +255,19 @@ public class Grille extends JPanel {
 	}
 
 
-	// DGFIOUGRZHIGROIGHZ GIO HJZIOGUHZIOGHZIOG
 	public int nombreEtoiles(int x, int y){
 
 		int compt = 0;
+		int rac = getComp(x,y);
+		ArrayList<Integer> tmp = new ArrayList<Integer>();
+		tmp.addAll(classe_.getTousFils(rac%taille_,rac/taille_));
+		tmp.add(rac);
 
-		for (int k = 0; k < taille_; ++k) {
-			for (int l = 0; l < taille_;  ++l) {
-				if(classe_.classe(l,k) == classe_.classe(x,y) && tab_[l+k*taille_].isBase())
-					++compt;
-			}
+		for (int i = 0; i < tmp.size(); ++i) {
+			if (isBase(tmp.get(i)%taille_, tmp.get(i)/taille_))
+				compt++;
 		}
+
 		return compt;
 	}
 

@@ -7,7 +7,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.*;
 
-public class Application {
+class Application {
 
 	/**
 	 * Point d'entrée du programme exécutable

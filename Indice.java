@@ -14,22 +14,9 @@ class Indice{
 		return pere;
 	}
 
-	public ArrayList<Integer> getFilsAines(){
+	public ArrayList<Integer> getFils(){
 		return fils;
 	}
-
-	public ArrayList<Integer> getTousFils(){
-		if (getFilsAines().size() == 0) {
-			System.out.println("arret");
-			return fils;
-		}
-		else{
-			ArrayList<Integer> tmp = getFilsAines();
-			tmp.addAll(getTousFils());
-			return tmp;
-		}
-	}
-
 
 	public void setPere(int x){
 		pere = x;

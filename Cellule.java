@@ -2,7 +2,7 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 
-public class Cellule extends JPanel {
+class Cellule extends JPanel {
 
 	private int case_;
 	private boolean etoile_;
