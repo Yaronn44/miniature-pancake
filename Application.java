@@ -16,7 +16,7 @@ class Application {
 	public static void main(String[] args) {
 		
 		// Création et affichage de la fenêtre graphique
-		Fenetre fenetre = new Fenetre("Un jeu de connexion", 2);
+		FenetreMenu fenetre = new FenetreMenu();
 		fenetre.repaint();
 	}
 

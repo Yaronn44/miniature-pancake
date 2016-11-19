@@ -17,21 +17,29 @@ class Fenetre extends JFrame{
 	private JPanel menu;
 	private JLabel affScoreJ1, affScoreJ2;
 	private JButton b1, b2, b3, b4, b5, b6, b7, b8;
-	private int j1, scoreJ1, scoreJ2, nbBase;
+	private int joueur, scoreJ1, scoreJ2, nbBase, taille, choix, compt, posTmpX, posTmpY;
 	private ArrayList<Integer> listeCoup;
+	private boolean vJ1, vJ2;
 
-	public Fenetre(String titre, int nbB) {
+	public Fenetre(String titre, int nbB, int t, int c) {
 
 		//------------------------------------------------------------------- Instanciation de la fenêtre principale et de son contenu
 		super(titre);
-		grille = new Grille(Constante.N, nbB);
+		grille = new Grille(t, nbB);
 		menu = new JPanel();
 		scoreJ1 = 0;
 		scoreJ2 = 0;
 		affScoreJ1 = new JLabel("Score joueur 1 : "+ scoreJ1);
 		affScoreJ2 = new JLabel("Score joueur 2 : "+ scoreJ2);
-		j1 = 1;
+		joueur = 1;
 		nbBase = nbB;
+		taille = t;
+		compt = 0;
+		posTmpX = 0;
+		posTmpY = 0;
+		vJ1 = false;
+		vJ2 = false;
+		choix = c;
 		listeCoup = new ArrayList<Integer>();
 
 		//------------------------------------------------------------------- Paramétrage de la fenêtre principale
@@ -56,8 +64,6 @@ class Fenetre extends JFrame{
 		b7 = new JButton("Get Coordonnée");
 		b8 = new JButton("Nouvelle partie");
 
-		jouer();
-
 		// afficheComposante
         b1.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
@@ -66,7 +72,9 @@ class Fenetre extends JFrame{
 		        		public void mousePressed(MouseEvent e){
 		    				grille.afficheComposante((e.getX()-1)/50, (e.getY()-1)/50);
 		    				suppr();
-		    				jouer();
+		    				if (choix == 1) {
+		    					joueDeuxHumain();
+		    				}
 		        		}
 		        });
 			}
@@ -80,7 +88,9 @@ class Fenetre extends JFrame{
 		        		public void mousePressed(MouseEvent e){
 		    				System.out.println(grille.getComp((e.getX()-1)/50, (e.getY()-1)/50));
 		    				suppr();
-		    				jouer();
+		    				if (choix == 1) {
+		    					joueDeuxHumain();
+		    				}
 		        		}
 		        });
 			}
@@ -94,7 +104,9 @@ class Fenetre extends JFrame{
 		        		public void mousePressed(MouseEvent e){
 		    				System.out.println(grille.getVal((e.getX()-1)/50, (e.getY()-1)/50));
 		    				suppr();
-		    				jouer();
+		    				if (choix == 1) {
+		    					joueDeuxHumain();
+		    				}
 		        		}
 		        });
 			}
@@ -108,11 +120,39 @@ class Fenetre extends JFrame{
 		        		public void mousePressed(MouseEvent e){
 		    				System.out.println(grille.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50));
 		    				suppr();
-		    				jouer();
+		    				if (choix == 1) {
+		    					joueDeuxHumain();
+		    				}
 		        		}
 		        });
 			}
         });
+
+
+		// nombreEtoile
+		b5.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a) {
+				suppr();
+				grille.addMouseListener(new MouseAdapter(){
+	        		public void mousePressed(MouseEvent e){
+    					if (compt == 0){
+    						posTmpX = (e.getX()-1)/50;
+    						posTmpY = (e.getY()-1)/50;
+    						++compt;
+    						System.out.println("coucou");
+    					}
+    					else{
+    						System.out.println(grille.relieCaseMin(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
+							suppr();
+							if (choix == 1)
+								joueDeuxHumain();
+							--compt;
+    					}
+	    			}
+		        });
+			}
+        });
+
 
 		// RELIE COMPOSANTE
         b6.addActionListener(new ActionListener(){
@@ -120,9 +160,11 @@ class Fenetre extends JFrame{
 				suppr();
 				grille.addMouseListener(new MouseAdapter(){
 		        		public void mousePressed(MouseEvent e){
-		    				System.out.println(grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, j1));
+		    				System.out.println(grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, joueur));
 		    				suppr();
-		    				jouer();
+		    				if (choix == 1) {
+		    					joueDeuxHumain();
+		    				}
 		        		}
 		        });
 			}
@@ -136,7 +178,9 @@ class Fenetre extends JFrame{
 		        		public void mousePressed(MouseEvent e){
 		        			System.out.println(e.getX()+"  "+e.getY());
 		    				suppr();
-		    				jouer();
+		    				if (choix == 1) {
+		    					joueDeuxHumain();
+		    				}
 		        		}
 		        });
 			}
@@ -145,8 +189,31 @@ class Fenetre extends JFrame{
 
         b8.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent a){
-        		dispose();
-        		Fenetre f = new Fenetre(titre, nbBase);
+
+        		JFrame aband = new JFrame("Tentatived'abandon de la part du joueur n°"+(joueur == 1 ? 1 : 2)+"(c'est lache, très lache)");
+
+				aband.setSize(600,100);
+				aband.setLocationRelativeTo(null);
+				aband.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+				aband.setVisible(true);
+
+				JButton oui = new JButton("Oui");
+				JButton non = new JButton("Non");
+				oui.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent arg0) {
+						dispose();
+						aband.dispose();
+						FenetreMenu newF = new FenetreMenu();
+					}
+				});
+
+				non.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {aband.dispose();}});
+
+				GridLayout layout = new GridLayout(1, 2,2 ,2);
+				aband.setLayout(layout);
+
+				aband.add(oui);
+				aband.add(non);
         	}
         });
 
@@ -190,6 +257,11 @@ class Fenetre extends JFrame{
 
 		getContentPane().setLayout(layout);
 		pack();
+
+
+		if (choix == 1) {
+			joueDeuxHumain();
+		}
 	}
 
 
@@ -200,41 +272,49 @@ class Fenetre extends JFrame{
 	}
 
 
-	public void jouer(){
+	public void joueDeuxHumain(){
 		grille.addMouseListener(new MouseAdapter(){
     		public void mousePressed(MouseEvent e){		 
 
-    			if (grille.getCell(e.getX(),e.getY()).testVal(j1)){								// colorerCase() s'effectue dans testVal()
+    			if (grille.getCell(e.getX(),e.getY()).colorerCase(joueur)){								// colorerCase() s'effectue dans testVal()
 
-    				listeCoup.add((e.getX()-1)/50+((e.getY()-1)/50)*Constante.N);
+    				listeCoup.add((e.getX()-1)/50+((e.getY()-1)/50)*taille);
 
-    				int tmp = grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, j1);
+    				int tmp = grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, joueur);
 
     				for (int i = 0; i < tmp; ++i)
-    					grille.union((e.getX()-1)/50, (e.getY()-1)/50, j1);
+    					grille.union((e.getX()-1)/50, (e.getY()-1)/50, joueur);
 
  					int scoreTmp = grille.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50);
 
-        			if (j1 == 1){
+        			if (joueur == 1){
 
         				if(scoreTmp > 1 && scoreTmp > scoreJ1){
         					scoreJ1 = scoreTmp;
         					afficheScore();
+        					if (scoreJ1 > scoreJ2) {
+        						vJ1 = true;
+        						vJ2 = false;
+        					}
         				}
 
-        				++j1;
+        				++joueur;
         			}
-        			else if(j1 == 2){
+        			else if(joueur == 2){
 
         				if(scoreTmp > 1 && scoreTmp > scoreJ2){
         					scoreJ2 = scoreTmp;
         					afficheScore();
+        					    if (scoreJ2 > scoreJ2) {
+        						vJ1 = false;
+        						vJ2 = true;
+        					}
         				}
 
-        				--j1;
+        				--joueur;
         			}
 
-        			if (scoreJ1 == nbBase || scoreJ2 == nbBase) {
+        			if (scoreJ1 == nbBase || scoreJ2 == nbBase || (listeCoup.size() == taille*taille - nbBase*2 && (scoreJ1 != 0 || scoreJ2 != 0))) {
 
         				JFrame fin = new JFrame("Bravo !!");
 
@@ -243,12 +323,17 @@ class Fenetre extends JFrame{
         				fin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
         				fin.setVisible(true);
 
-        				JButton bouton = new JButton("Bravo le joueur n°"+(j1 == 1 ? 2 : 1) +" a remporté la partie !");
-        				bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fin.dispose();}});
+        				JButton bouton = new JButton("Bravo le joueur n°"+(vJ1 ? 1 : 2) +" a remporté la partie !");
+        				bouton.addActionListener(new ActionListener(){
+        					public void actionPerformed(ActionEvent arg0) {
+        						dispose();
+        						fin.dispose();
+        						FenetreMenu newF = new FenetreMenu();
+        					}
+        				});
         				fin.add(bouton);
         			}
-        			else if(listeCoup.size() == Constante.N*Constante.N - nbBase*2){
-
+        			else if(listeCoup.size() == taille*taille - nbBase*2){
         				JFrame fin = new JFrame("Hum....");
 
         				fin.setSize(400,100);
@@ -257,10 +342,30 @@ class Fenetre extends JFrame{
         				fin.setVisible(true);
 
         				JButton bouton = new JButton("Et bien il semble que ce soit un match nul !");
-        				bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fin.dispose();}});
+        				bouton.addActionListener(new ActionListener(){
+        					public void actionPerformed(ActionEvent arg0) {
+        						dispose();
+        						fin.dispose();
+        						FenetreMenu newF = new FenetreMenu();
+        					}
+        				});
         				fin.add(bouton);
         			}
         		}
+        		else{
+        			JFrame fenetre = new JFrame("Erreur");
+
+					fenetre.setSize(200,100);
+					fenetre.setLocationRelativeTo(null);
+					fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+					fenetre.setVisible(true);
+					fenetre.setAlwaysOnTop(true);
+					setEnabled(false);
+
+					JButton bouton = new JButton("La case est déjà coloré !");
+					bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fenetre.dispose(); setEnabled(true);}});
+					fenetre.add(bouton);
+				}
     		}
    		});
 	}
@@ -269,5 +374,9 @@ class Fenetre extends JFrame{
 		MouseListener m[] = grille.getMouseListeners(); 
 		if(m.length > 0)
 			grille.removeMouseListener(m[0]);
+	}
+
+	public void testRelieComp(){
+
 	}
 }

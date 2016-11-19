@@ -2,6 +2,7 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
+import java.lang.*;
 
 
 /**
@@ -269,6 +270,44 @@ class Grille extends JPanel {
 		}
 
 		return compt;
+	}
+
+	public int relieCaseMin(int x, int y, int z, int t){
+		if (tab_[x+y*taille_].getVal() == tab_[z+t*taille_].getVal()) {
+			int tmp1 = ((x+1+y+1)/2) - ((z+1+t+1)/2);
+			int tmp2 = (Math.abs(x+1-y+1)/2) - (Math.abs(z+1-t+1)/2);
+			return (Math.abs(tmp1)+Math.abs(tmp2)+Math.abs(tmp1-tmp2))/2 - 1;
+		}
+		return 0;
+	}
+
+	public boolean existeCheminCase(int x, int y, int z, int t){
+		ArrayList<Integer> chemin = new ArrayList<Integer>();
+		for (int i = -1; i < 1; ++i) {
+			for (int j = -1; j < 1; ++j){
+				if (tab_[(x+i)+(y+j)*taille_].getVal() == 0){
+					if (i == 0 && j == 0) 
+						continue;
+
+					chemin.add((x+i)+(y+j)*taille_);
+				}
+			}
+		}
+		if (chemin.size() == 0) {
+			return false;
+		}
+		else{
+			Collections.sort(chemin, new Comparator<Fruit>() {
+			        @Override
+			        public int compare(Fruit fruit2, Fruit fruit1){
+
+			            return  tab_[.fruitName.compareTo(fruit2.fruitName);
+			        }
+			    });
+			for (int i = 0; i < 8; ++i) {
+				
+			}
+		}
 	}
 
 }

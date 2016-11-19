@@ -87,23 +87,4 @@ class Cellule extends JPanel {
 		}
 		return false;
 	}
-
-	public boolean testVal(int val){
-		if (!colorerCase(val)){
-
-			JFrame fenetre = new JFrame("Erreur");
-
-			fenetre.setSize(200,100);
-			fenetre.setLocationRelativeTo(null);
-			fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
-			fenetre.setVisible(true);
-
-			JButton bouton = new JButton("La case est déjà coloré !");
-			bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fenetre.dispose();}});
-			fenetre.add(bouton);
-
-			return false;
-		}
-		return true;
-	}
 }
