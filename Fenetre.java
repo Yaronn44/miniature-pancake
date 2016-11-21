@@ -16,7 +16,7 @@ class Fenetre extends JFrame{
 	private Grille grille;
 	private JPanel menu;
 	private JLabel affScoreJ1, affScoreJ2;
-	private JButton b1, b2, b3, b4, b5, b6, b7, b8;
+	private JButton b1, b2, b3, b4, b5, b6, b7, b8, b9, b10;
 	private int joueur, scoreJ1, scoreJ2, nbBase, taille, choix, compt, posTmpX, posTmpY;
 	private ArrayList<Integer> listeCoup;
 	private boolean vJ1, vJ2;
@@ -59,10 +59,12 @@ class Fenetre extends JFrame{
 		b2 = new JButton("Connaitre Composante");
 		b3 = new JButton("Connaitre Val");
 		b4 = new JButton("Nombre d'étoiles");
-		b5 = new JButton("");
+		b5 = new JButton("Relie Case Min");
 		b6 = new JButton("Relie Composante");
 		b7 = new JButton("Get Coordonnée");
-		b8 = new JButton("Nouvelle partie");
+		b8 = new JButton("Abandonner");
+		b9 = new JButton("Existe Chemin Case");
+		b10 = new JButton("Fils");
 
 		// afficheComposante
         b1.addActionListener(new ActionListener(){
@@ -129,7 +131,7 @@ class Fenetre extends JFrame{
         });
 
 
-		// nombreEtoile
+		// relieCaseMin
 		b5.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -139,7 +141,6 @@ class Fenetre extends JFrame{
     						posTmpX = (e.getX()-1)/50;
     						posTmpY = (e.getY()-1)/50;
     						++compt;
-    						System.out.println("coucou");
     					}
     					else{
     						System.out.println(grille.relieCaseMin(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
@@ -217,6 +218,46 @@ class Fenetre extends JFrame{
         	}
         });
 
+        b9.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a) {
+				suppr();
+				grille.addMouseListener(new MouseAdapter(){
+		        		public void mousePressed(MouseEvent e){
+	    					if (compt == 0){
+	    						posTmpX = (e.getX()-1)/50;
+	    						posTmpY = (e.getY()-1)/50;
+	    						++compt;
+	    					}
+	    					else{
+	    						System.out.println(grille.existeCheminCase(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
+								suppr();
+								if (choix == 1)
+									joueDeuxHumain();
+								--compt;
+	    					}
+		        		}
+		        });
+			}
+        });
+
+        b10.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a) {
+				suppr();
+				grille.addMouseListener(new MouseAdapter(){
+		        		public void mousePressed(MouseEvent e){
+		        			grille.afficher((e.getX()-1)/50,(e.getY()-1)/50);
+		    				suppr();
+		    				if (choix == 1) {
+		    					joueDeuxHumain();
+		    				}
+		        		}
+		        });
+			}
+        });
+
+
+
+
         // Ajout des boutons au menu
         menu.add(b1);
 		menu.add(b2);
@@ -226,6 +267,8 @@ class Fenetre extends JFrame{
 		menu.add(b6);
 		menu.add(b7);
 		menu.add(b8);
+		menu.add(b9);
+		menu.add(b10);
 
 		//------------------------------------------------------------------- Affichage graphique de la fenêtre 
 

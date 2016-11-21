@@ -276,7 +276,10 @@ class Grille extends JPanel {
 		if (tab_[x+y*taille_].getVal() == tab_[z+t*taille_].getVal()) {
 			int tmp1 = (z-x);
 			int tmp2 = (t-y);
-			return (Math.abs(tmp1)+Math.abs(tmp2)+Math.abs(tmp1-tmp2))/2 - 1;
+			if ((tmp1 > 0 && tmp2 < 0) ||(tmp1 < 0 && tmp2 > 0)) 
+				return Math.max(Math.abs(tmp1),Math.abs(tmp2)) - 1;
+			else
+				return (Math.abs(tmp1)+Math.abs(tmp2)) - 1;
 		}
 		return 0;
 	}
@@ -292,8 +295,6 @@ class Grille extends JPanel {
 		int yDep = 0;
 		int xArr = 0;
 		int yArr = 0;
-		int xPrec = -1;
-		int yPrec = -1;
 
 		do {
 			if (xTmp == 0){
@@ -337,7 +338,6 @@ class Grille extends JPanel {
 					if (i == 0 && j == 0) 
 						continue;
 
-					System.out.println("num boucle : " + ((xTmp+j)+(yTmp+i)*taille_));
 					if (tab_[(xTmp+j)+(yTmp+i)*taille_].getVal() == 0 && !caseImp.contains(((xTmp+j)+(yTmp+i)*taille_))){
 
 						if (relieCaseMin(xTmp+j,yTmp+i, z, t) == 0) {
@@ -363,11 +363,7 @@ class Grille extends JPanel {
 
 				caseImp.add((xTmp+yTmp*taille_));
 
-				for (int i = 0; i < caseWait.size(); ++i) {
-					System.out.println("case : " + caseWait.get(i));
-				}
 				if (caseWait.contains((xTmp+yTmp*taille_))) {
-					System.out.println(" caseWait : " + (xTmp+yTmp*taille_));
 					caseWait.remove(Integer.valueOf(xTmp+yTmp*taille_));
 				}
 				if (caseWait.size() == 0) {
@@ -384,14 +380,8 @@ class Grille extends JPanel {
 				}
 				else{
 					caseAcc = triTab(caseAcc, z, t);
-					for (int i = 0; i < caseAcc.size(); ++i) {
-						System.out.println("test : " + caseAcc.get(i));
-					}
 					xTmp = caseAcc.get(0)%taille_;
 					yTmp = caseAcc.get(0)/taille_;
-					System.out.println("xTmp : " + xTmp);
-					System.out.println("yTmp : " + yTmp);
-
 				}
 			}
 

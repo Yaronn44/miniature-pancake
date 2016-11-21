@@ -39,9 +39,12 @@ class ClasseUnion{
 		if (classe_.get(x+y*taille_).getPere() == -1)
 			return (x+y*taille_);
 		else{
+			return classe(classe_.get(x+y*taille_).getPere()%taille_, classe_.get(x+y*taille_).getPere()/taille_);
+			/*	
 			int a = classe(classe_.get(x+y*taille_).getPere()%taille_, classe_.get(x+y*taille_).getPere()/taille_);
 			classe_.get(x+y*taille_).setPere(a);
 			return a;
+			*/
 		}
 	}
 
@@ -51,6 +54,7 @@ class ClasseUnion{
 
 		return taille_;
 	}
+
 
 	public ArrayList<Integer> getTousFils(int x, int y){
 		
