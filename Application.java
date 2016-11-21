@@ -6,6 +6,8 @@
 import java.awt.*;
 import javax.swing.*;
 import java.*;
+import java.util.*;
+import java.lang.*;
 
 class Application {
 
@@ -18,6 +20,7 @@ class Application {
 		// Création et affichage de la fenêtre graphique
 		FenetreMenu fenetre = new FenetreMenu();
 		fenetre.repaint();
+		
 	}
 
 

@@ -274,40 +274,147 @@ class Grille extends JPanel {
 
 	public int relieCaseMin(int x, int y, int z, int t){
 		if (tab_[x+y*taille_].getVal() == tab_[z+t*taille_].getVal()) {
-			int tmp1 = ((x+1+y+1)/2) - ((z+1+t+1)/2);
-			int tmp2 = (Math.abs(x+1-y+1)/2) - (Math.abs(z+1-t+1)/2);
+			int tmp1 = (z-x);
+			int tmp2 = (t-y);
 			return (Math.abs(tmp1)+Math.abs(tmp2)+Math.abs(tmp1-tmp2))/2 - 1;
 		}
 		return 0;
 	}
 
 	public boolean existeCheminCase(int x, int y, int z, int t){
-		ArrayList<Integer> chemin = new ArrayList<Integer>();
-		for (int i = -1; i < 1; ++i) {
-			for (int j = -1; j < 1; ++j){
-				if (tab_[(x+i)+(y+j)*taille_].getVal() == 0){
+
+
+		ArrayList<Integer> caseImp = new ArrayList<Integer>();
+		ArrayList<Integer> caseWait = new ArrayList<Integer>();
+		int xTmp = x;
+		int yTmp = y;
+		int xDep = 0;
+		int yDep = 0;
+		int xArr = 0;
+		int yArr = 0;
+		int xPrec = -1;
+		int yPrec = -1;
+
+		do {
+			if (xTmp == 0){
+				if( yTmp == 0){
+					xDep = 0; yDep = 0; xArr = 1; yArr = 1;
+				}
+				else if(yTmp == taille_ - 1){
+					xDep = 0; yDep = -1; xArr = 1; yArr = 0;
+				}
+				else {
+					xDep = 0; yDep = -1; xArr = 1; yArr = 1;
+				}
+			}
+			else if (xTmp == taille_ - 1){
+				if( yTmp == 0){
+					xDep = -1; yDep = 0; xArr = 0; yArr = 1;
+				}
+				else if(yTmp == taille_ - 1){
+					xDep = -1; yDep = -1; xArr = 0; yArr = 0;
+				}
+				else {
+					xDep = -1; yDep = -1; xArr = 0; yArr = 1;
+				}
+			}
+			else{
+				if( yTmp == 0){
+					xDep = -1; yDep = 0; xArr = 1; yArr = 1;
+				}
+				else if(yTmp == taille_-1){
+					xDep = -1; yDep = -1; xArr = 1; yArr = 0;
+				}
+				else {
+					xDep = -1; yDep = -1; xArr = 1; yArr = 1;
+				}
+			}
+			
+			ArrayList<Integer> caseAcc = new ArrayList<Integer>();
+
+			for (int i = yDep; i <= yArr; ++i) {
+				for (int j = xDep; j <= xArr; ++j){
 					if (i == 0 && j == 0) 
 						continue;
 
-					chemin.add((x+i)+(y+j)*taille_);
+					System.out.println("num boucle : " + ((xTmp+j)+(yTmp+i)*taille_));
+					if (tab_[(xTmp+j)+(yTmp+i)*taille_].getVal() == 0 && !caseImp.contains(((xTmp+j)+(yTmp+i)*taille_))){
+
+						if (relieCaseMin(xTmp+j,yTmp+i, z, t) == 0) {
+							return true;
+						}
+
+						if (!caseWait.contains(((xTmp+j)+(yTmp+i)*taille_))) {
+							caseAcc.add(((xTmp+j)+(yTmp+i)*taille_));
+						}
+						
+
+						if (!caseWait.contains(((xTmp+j)+(yTmp+i)*taille_))){
+							caseWait.add((xTmp+j)+(yTmp+i)*taille_);
+						}
+					}
+					else if(tab_[(xTmp+j)+(yTmp+i)*taille_].getVal() != 0) {
+						caseImp.add(((xTmp+j)+(yTmp+i)*taille_));
+					}
 				}
 			}
-		}
-		if (chemin.size() == 0) {
-			return false;
-		}
-		else{
-			Collections.sort(chemin, new Comparator<Fruit>() {
-			        @Override
-			        public int compare(Fruit fruit2, Fruit fruit1){
 
-			            return  tab_[.fruitName.compareTo(fruit2.fruitName);
-			        }
-			    });
-			for (int i = 0; i < 8; ++i) {
-				
+			if (caseAcc.size() == 0){
+
+				caseImp.add((xTmp+yTmp*taille_));
+
+				for (int i = 0; i < caseWait.size(); ++i) {
+					System.out.println("case : " + caseWait.get(i));
+				}
+				if (caseWait.contains((xTmp+yTmp*taille_))) {
+					System.out.println(" caseWait : " + (xTmp+yTmp*taille_));
+					caseWait.remove(Integer.valueOf(xTmp+yTmp*taille_));
+				}
+				if (caseWait.size() == 0) {
+					break;
+				}
+				else{
+					xTmp = caseWait.get(caseWait.size()-1)%taille_;
+					yTmp = caseWait.get(caseWait.size()-1)/taille_;
+				}
 			}
+			else{
+				if (caseWait.size() == 0) {
+					break;
+				}
+				else{
+					caseAcc = triTab(caseAcc, z, t);
+					for (int i = 0; i < caseAcc.size(); ++i) {
+						System.out.println("test : " + caseAcc.get(i));
+					}
+					xTmp = caseAcc.get(0)%taille_;
+					yTmp = caseAcc.get(0)/taille_;
+					System.out.println("xTmp : " + xTmp);
+					System.out.println("yTmp : " + yTmp);
+
+				}
+			}
+
+		}while(caseWait.size() > 0);
+
+		return false;
+	}
+
+	public ArrayList<Integer> triTab(ArrayList<Integer> tab, int z, int t){
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		while(tab.size() > 0){
+			int min = taille_;
+			int pos = 0;
+			for (int i = 0; i < tab.size(); ++i) {
+				if (relieCaseMin(tab.get(i)%taille_, tab.get(i)/taille_, z, t) < min) {
+					min = relieCaseMin(tab.get(i)%taille_, tab.get(i)/taille_, z, t);
+					pos = i;
+				}
+			}
+			res.add(tab.get(pos));
+			tab.remove(pos);
 		}
+		return res;
 	}
 
 }
