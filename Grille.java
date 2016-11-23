@@ -18,7 +18,8 @@ class Grille extends JPanel {
 	private int dim_; 						// Dimensions de la fenêtre d'affichage en pixels
 	private Cellule tab_[];
 	private ClasseUnion classe_;
-	private ArrayList<Integer> posBaseJ1, posBaseJ2, evaluer;
+	private ArrayList<Integer> posBaseJ1, posBaseJ2;
+	private int xCentreJ1, yCentreJ1, xCentreJ2, yCentreJ2;
 
 
 	public Grille(int t, int nbBase) {
@@ -30,7 +31,6 @@ class Grille extends JPanel {
 		classe_ = new ClasseUnion(t);
 		posBaseJ1 = new ArrayList<Integer>();
 		posBaseJ2 = new ArrayList<Integer>();
-		evaluer = new ArrayList<Integer>();
 
 		Dimension d = new Dimension(dim_, dim_);
 
@@ -94,6 +94,24 @@ class Grille extends JPanel {
 			tab_[nb1+nb2*taille_].setBase(2);
 			posBaseJ2.add(nb1+nb2*taille_);
 		}
+		
+		xCentreJ1 = 0;
+		yCentreJ1 = 0;
+		xCentreJ2 = 0;
+		yCentreJ2 = 0;
+		
+		for (int i = 0; i < nbBase; ++i) {
+			xCentreJ1 += posBaseJ1.get(i)%taille_;
+			yCentreJ1 += posBaseJ1.get(i)/taille_;
+
+			xCentreJé += posBaseJ2.get(i)%taille_;
+			yCentreJé += posBaseJ2.get(i)/taille_;
+		}
+		
+		xCentreJ1 /= nbBase;
+		yCentreJ1 /= nbBase;
+		xCentreJ2 /= nbBase;
+		yCentreJ2 /= nbBase;
 	}
 
 	// ---------------------------------------- Getteurs
@@ -449,19 +467,11 @@ class Grille extends JPanel {
 		return compt;
 	}
 
-	public int evaluerCase1(int x, int y, int z, int t, int j){
-		int xCentre = 0;
-		int yCentre = 0;
-		
-		if (j == 1) {
-			for (int i = 0; i < posBaseJ1.size(); ++i) {
-				xCentre += posBaseJ1.get(i)%taille_;
-				yCentre += posBaseJ1.get(i)/taille_;
-			}
-			xCentre /= nbBase;
-			yCentre /= nbBase;
-		}
-
+	public int evaluerCase1(int x, int y, int j){
+		if(j == 1)
+			return distanceCase(x, y, xCentreJ1, yCentreJ1);
+		else if(j == 2)
+			return distanceCase(x, y, xCentreJ2, yCentreJ2);
 	}
 
 	// ------------------------------------------ Méthodes supplémentaires
