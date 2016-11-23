@@ -18,7 +18,7 @@ class Fenetre extends JFrame{
 	private JLabel affScoreJ1, affScoreJ2;
 	private JButton b1, b2, b3, b4, b5, b6, b7, b8, b9, b10;
 	private int joueur, scoreJ1, scoreJ2, nbBase, taille, choix, compt, posTmpX, posTmpY;
-	private ArrayList<Integer> listeCoup;
+	private ArrayList<Integer> listeCoup, evaluer;
 	private boolean vJ1, vJ2;
 
 	public FenetreJeu(String titre, int nbB, int t, int c) {
@@ -41,6 +41,7 @@ class Fenetre extends JFrame{
 		vJ2 = false;
 		choix = c;
 		listeCoup = new ArrayList<Integer>();
+		evaluer = new ArrayList<Integer>();
 
 		//------------------------------------------------------------------- Paramétrage de la fenêtre principale
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -433,7 +434,15 @@ class Fenetre extends JFrame{
 			grille.removeMouseListener(m[0]);
 	}
 
-	public void testRelieComp(){
-
+	public int trouverCase1(int j){
+		int index = -1;
+		int valTmp = taille;
+		for(int i = 0; i < taille*taille; ++i){
+			if(grille.evaluerCase1(i%taille, i/taille, j) < valTmp{
+				valTmp = grille.evaluerCase1(i%taille, i/taille, j);
+				index = i;
+			}
+		}
+		return index;	
 	}
 }
