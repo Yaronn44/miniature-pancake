@@ -21,7 +21,7 @@ class Fenetre extends JFrame{
 	private ArrayList<Integer> listeCoup;
 	private boolean vJ1, vJ2;
 
-	public Fenetre(String titre, int nbB, int t, int c) {
+	public FenetreJeu(String titre, int nbB, int t, int c) {
 
 		//------------------------------------------------------------------- Instanciation de la fenêtre principale et de son contenu
 		super(titre);
@@ -44,7 +44,7 @@ class Fenetre extends JFrame{
 
 		//------------------------------------------------------------------- Paramétrage de la fenêtre principale
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(true);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
 
@@ -318,7 +318,8 @@ class Fenetre extends JFrame{
 		}
 	}
 
-
+	// ------------------------------------------ Méthodes Demandées
+	
 	public void afficheScore(){
 
 		affScoreJ1.setText("Score joueur 1 : "+ scoreJ1);
@@ -411,7 +412,7 @@ class Fenetre extends JFrame{
 
 					fenetre.setSize(200,100);
 					fenetre.setLocationRelativeTo(null);
-					fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+					fenetre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);   
 					fenetre.setVisible(true);
 					fenetre.setAlwaysOnTop(true);
 					setEnabled(false);
@@ -423,6 +424,8 @@ class Fenetre extends JFrame{
     		}
    		});
 	}
+
+	// ------------------------------------------ Méthodes supplémentairess
 
 	public void suppr(){
 		MouseListener m[] = grille.getMouseListeners(); 

@@ -5,27 +5,46 @@ import java.awt.*;
 import javax.swing.*;
 import java.*;
 import java.util.*;
+import java.text.NumberFormat;
 
 
 class FenetreMenu extends JFrame{
 
 	private JButton jcj, jco;
+	private JLabel texteSelec, texteNbBase, texteTailleTab;
+	private JFormattedTextField nbBase;
+	private JFormattedTextField tailleTab;
 
 	public FenetreMenu(){
-		super("Menu");
+		super("Paramètre de la partie");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
 		setLocationRelativeTo(null);
 		setVisible(true);
+
 		jcj = new JButton("Joueur contre Joueur");
 		jco = new JButton("Joueur contre Ordi");
-		JLabel selection = new JLabel("Veuillez séléctionner le mode de jeu souhaité :");
+
+		texteSelec = new JLabel("Veuillez séléctionner le mode de jeu souhaité :");
+		texteTailleTab = new JLabel("Taille de la grille (4 <= taille <= 15) : ");
+		texteNbBase = new JLabel("Nombre de base (2 <= nombre base <= taille) : ");
+
+		nbBase = new JFormattedTextField(NumberFormat.getIntegerInstance());
+		tailleTab = new JFormattedTextField(NumberFormat.getIntegerInstance());
 
 		jcj.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
-				dispose();
-				Fenetre fenetre = new Fenetre("Un jeu de connexion", 2, 10, 1);
+				if (nbBase.getValue() != null && tailleTab.getValue() != null ) {
+
+					int nb = Integer.parseInt(nbBase.getText());
+					int taille = Integer.parseInt(tailleTab.getText());
+
+					if ((taille >= 4 && taille <= 15) && (nb >= 2 && nb <= taille)) {
+						dispose();
+						Fenetre fenetre = new Fenetre("Un jeu de connexion", nb, taille, 1);
+					}
+				}
 			}
         });
 
@@ -36,8 +55,13 @@ class FenetreMenu extends JFrame{
 		layout.setHorizontalGroup( 
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(selection)
-					.addComponent(jcj))
+					.addComponent(texteSelec)
+					.addComponent(texteTailleTab)
+					.addComponent(texteNbBase))
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(jcj)
+					.addComponent(tailleTab)
+					.addComponent(nbBase))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(jco))
 		);
@@ -46,10 +70,15 @@ class FenetreMenu extends JFrame{
 		layout.setVerticalGroup( 
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(selection))
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(jcj) 
+					.addComponent(texteSelec)
+					.addComponent(jcj)
 					.addComponent(jco))
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(texteTailleTab)
+					.addComponent(tailleTab))
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+					.addComponent(texteNbBase)
+					.addComponent(nbBase))
 		);
 
 		getContentPane().setLayout(layout);

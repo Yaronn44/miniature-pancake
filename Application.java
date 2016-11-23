@@ -22,7 +22,4 @@ class Application {
 		fenetre.repaint();
 		
 	}
-
-
-
 }
