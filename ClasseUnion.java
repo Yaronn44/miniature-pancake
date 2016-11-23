@@ -38,13 +38,10 @@ class ClasseUnion{
 	public int classe(int x, int y){
 		if (classe_.get(x+y*taille_).getPere() == -1)
 			return (x+y*taille_);
-		else{
-			return classe(classe_.get(x+y*taille_).getPere()%taille_, classe_.get(x+y*taille_).getPere()/taille_);
-			/*	
+		else{	
 			int a = classe(classe_.get(x+y*taille_).getPere()%taille_, classe_.get(x+y*taille_).getPere()/taille_);
 			classe_.get(x+y*taille_).setPere(a);
-			return a;
-			*/
+			return a;	
 		}
 	}
 
@@ -64,7 +61,8 @@ class ClasseUnion{
 			return (new ArrayList<Integer>());
 
 		else{
-			ArrayList<Integer> tmp = classe_.get(x+y*taille_).getFils();
+			ArrayList<Integer> tmp = new ArrayList<Integer>();
+			tmp.addAll(classe_.get(x+y*taille_).getFils());
 			for (int i = 0; i < t; ++i)
 				tmp.addAll(getTousFils(tmp.get(i)%taille_, tmp.get(i)/taille_));
 

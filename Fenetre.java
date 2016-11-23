@@ -59,11 +59,11 @@ class Fenetre extends JFrame{
 		b2 = new JButton("Connaitre Composante");
 		b3 = new JButton("Connaitre Val");
 		b4 = new JButton("Nombre d'étoiles");
-		b5 = new JButton("Relie Case Min");
+		b5 = new JButton("Distance Case");
 		b6 = new JButton("Relie Composante");
-		b7 = new JButton("Get Coordonnée");
+		b7 = new JButton("existe Chemin Cases");
 		b8 = new JButton("Abandonner");
-		b9 = new JButton("Existe Chemin Case");
+		b9 = new JButton("relieCaseMin");
 		b10 = new JButton("Fils");
 
 		// afficheComposante
@@ -131,7 +131,7 @@ class Fenetre extends JFrame{
         });
 
 
-		// relieCaseMin
+		// distanceCase
 		b5.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -143,7 +143,7 @@ class Fenetre extends JFrame{
     						++compt;
     					}
     					else{
-    						System.out.println(grille.relieCaseMin(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
+    						System.out.println(grille.distanceCase(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
 							suppr();
 							if (choix == 1)
 								joueDeuxHumain();
@@ -171,23 +171,30 @@ class Fenetre extends JFrame{
 			}
         });
 
-
+        // existeCheminCases
         b7.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
 				grille.addMouseListener(new MouseAdapter(){
 		        		public void mousePressed(MouseEvent e){
-		        			System.out.println(e.getX()+"  "+e.getY());
-		    				suppr();
-		    				if (choix == 1) {
-		    					joueDeuxHumain();
-		    				}
+	    					if (compt == 0){
+	    						posTmpX = (e.getX()-1)/50;
+	    						posTmpY = (e.getY()-1)/50;
+	    						++compt;
+	    					}
+	    					else{
+	    						System.out.println(grille.existeCheminCases(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
+								suppr();
+								if (choix == 1)
+									joueDeuxHumain();
+								--compt;
+	    					}
 		        		}
 		        });
 			}
         });
 
-
+        //Abandonner
         b8.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent a){
 
@@ -218,6 +225,7 @@ class Fenetre extends JFrame{
         	}
         });
 
+        //relieCaseMin
         b9.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();
@@ -229,7 +237,9 @@ class Fenetre extends JFrame{
 	    						++compt;
 	    					}
 	    					else{
-	    						System.out.println(grille.existeCheminCase(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
+	    						int col1 = grille.getVal(posTmpX, posTmpY);
+	    						int col2 = grille.getVal((e.getX()-1)/50, (e.getY()-1)/50);
+	    						System.out.println(grille.relieCaseMin(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50, col1, col2));
 								suppr();
 								if (choix == 1)
 									joueDeuxHumain();
@@ -240,6 +250,7 @@ class Fenetre extends JFrame{
 			}
         });
 
+        //getTousFils
         b10.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				suppr();

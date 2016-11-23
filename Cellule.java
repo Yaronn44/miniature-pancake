@@ -63,8 +63,10 @@ class Cellule extends JPanel {
 			setBackground(Color.green);
 		else if(case_ == 1)
 			setBackground(Color.blue);
-		else
+		else if(case_ == 2)
 			setBackground(Color.red);
+		else
+			setBackground(Color.white);
 	}
 
 	public boolean setBase(int val){
