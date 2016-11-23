@@ -468,10 +468,18 @@ class Grille extends JPanel {
 	}
 
 	public int evaluerCase1(int x, int y, int j){
-		if(j == 1)
-			return distanceCase(x, y, xCentreJ1, yCentreJ1);
-		else if(j == 2)
-			return distanceCase(x, y, xCentreJ2, yCentreJ2);
+		if(j == 1){
+			if(getVal(x, y) != j)
+				return taille_;
+			else
+				return distanceCase(x, y, xCentreJ1, yCentreJ1);
+		}
+		else if(j == 2){
+			if(getVal(x, y) != j)
+				return taille_;
+			else
+				return distanceCase(x, y, xCentreJ2, yCentreJ2);
+		}
 	}
 
 	// ------------------------------------------ Méthodes supplémentaires
