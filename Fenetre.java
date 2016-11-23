@@ -11,7 +11,7 @@ import java.util.*;
  * Classe dont les instances sont des fenêtres graphiques
  * dérivées de JFrame.
  */
-class Fenetre extends JFrame{
+class FenetreJeu extends JFrame{
 
 	private Grille grille;
 	private JPanel menu;
@@ -332,6 +332,106 @@ class Fenetre extends JFrame{
 		grille.addMouseListener(new MouseAdapter(){
     		public void mousePressed(MouseEvent e){		 
 
+    			if (grille.getCell(e.getX(),e.getY()).colorerCase(joueur)){								// colorerCase() s'effectue dans testVal()
+
+    				listeCoup.add((e.getX()-1)/50+((e.getY()-1)/50)*taille);
+
+    				int tmp = grille.relieComposante((e.getX()-1)/50, (e.getY()-1)/50, joueur);
+
+    				for (int i = 0; i < tmp; ++i)
+    					grille.union((e.getX()-1)/50, (e.getY()-1)/50, joueur);
+
+ 					int scoreTmp = grille.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50);
+
+        			if (joueur == 1){
+
+        				if(scoreTmp > 1 && scoreTmp > scoreJ1){
+        					scoreJ1 = scoreTmp;
+        					afficheScore();
+        					if (scoreJ1 > scoreJ2) {
+        						vJ1 = true;
+        						vJ2 = false;
+        					}
+        				}
+
+        				++joueur;
+        			}
+        			else if(joueur == 2){
+
+        				if(scoreTmp > 1 && scoreTmp > scoreJ2){
+        					scoreJ2 = scoreTmp;
+        					afficheScore();
+        					    if (scoreJ2 > scoreJ2) {
+        						vJ1 = false;
+        						vJ2 = true;
+        					}
+        				}
+
+        				--joueur;
+        			}
+
+        			if (scoreJ1 == nbBase || scoreJ2 == nbBase || (listeCoup.size() == taille*taille - nbBase*2 && (scoreJ1 != 0 || scoreJ2 != 0))) {
+
+        				JFrame fin = new JFrame("Bravo !!");
+
+        				fin.setSize(400,100);
+        				fin.setLocationRelativeTo(null);
+        				fin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+        				fin.setVisible(true);
+
+        				JButton bouton = new JButton("Bravo le joueur n°"+(vJ1 ? 1 : 2) +" a remporté la partie !");
+        				bouton.addActionListener(new ActionListener(){
+        					public void actionPerformed(ActionEvent arg0) {
+        						dispose();
+        						fin.dispose();
+        						FenetreMenu newF = new FenetreMenu();
+        					}
+        				});
+        				fin.add(bouton);
+        			}
+        			else if(listeCoup.size() == taille*taille - nbBase*2){
+        				JFrame fin = new JFrame("Hum....");
+
+        				fin.setSize(400,100);
+        				fin.setLocationRelativeTo(null);
+        				fin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+        				fin.setVisible(true);
+
+        				JButton bouton = new JButton("Et bien il semble que ce soit un match nul !");
+        				bouton.addActionListener(new ActionListener(){
+        					public void actionPerformed(ActionEvent arg0) {
+        						dispose();
+        						fin.dispose();
+        						FenetreMenu newF = new FenetreMenu();
+        					}
+        				});
+        				fin.add(bouton);
+        			}
+        		}
+        		else{
+        			JFrame fenetre = new JFrame("Erreur");
+
+					fenetre.setSize(200,100);
+					fenetre.setLocationRelativeTo(null);
+					fenetre.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);   
+					fenetre.setVisible(true);
+					fenetre.setAlwaysOnTop(true);
+					setEnabled(false);
+
+					JButton bouton = new JButton("La case est déjà coloré !");
+					bouton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {fenetre.dispose(); setEnabled(true);}});
+					fenetre.add(bouton);
+				}
+    		}
+   		});
+	}
+	
+	
+	public void joueOrdiHumain(){
+		grille.addMouseListener(new MouseAdapter(){
+    		public void mousePressed(MouseEvent e){		 
+
+			
     			if (grille.getCell(e.getX(),e.getY()).colorerCase(joueur)){								// colorerCase() s'effectue dans testVal()
 
     				listeCoup.add((e.getX()-1)/50+((e.getY()-1)/50)*taille);
