@@ -7,42 +7,37 @@ class Cellule extends JPanel {
 	private int case_;
 	private boolean etoile_;
 
+
+	//!\ Constructeur de Cellule
 	public Cellule(){
 
+		//!\ Initialisation des variables
 		case_ = 0;
 		etoile_ = false;
+
+		// Interface graphique de la case
 		setBackground(Color.white);
 		setPreferredSize(new Dimension(50,50));
 	}
 
-	public Cellule(int val, boolean base){
 
-		case_ = val;
-		etoile_ = base;
-		if (case_ == 1)
-			setBackground(Color.blue);
-		else if(case_ == 2)
-			setBackground(Color.red);
-
-
-		// Affichage de l'étoile dans les bases
-		setPreferredSize(new Dimension(50,50));
-		JLabel texte = new JLabel("*");
-		texte.setFont(new Font("Serif", Font.BOLD, 20));
-		texte.setForeground(Color.BLACK);
-		add(texte);
-	}
-
-
+	//!\---------------------- Getters
 	public int getVal(){
 		return case_;
 	}
 
+
 	public boolean isBase(){
 		return etoile_;
-	}
+	}	
+	//!\---------------------- Fin Getters
 
-	public boolean colorerCase(int val){ 			
+
+	//!\brief Méthode n°1 colorerCase
+	//!\param val : si = 1 colore la case en bleu, si = 2 colore la case en rouge
+	//!\return un booléen afin de savoir si la case à bien été coloré 
+	public boolean colorerCase(int val){ 		
+
 		if (case_ == 0 && (val == 1 || val == 2 || val == 3)){
 			case_ = val;
 
@@ -58,7 +53,10 @@ class Cellule extends JPanel {
 		return false;
 	}
 
+
+	//!\ Méthode utile à afficheComposante
 	public void colorerTemp(){
+
 		if (getBackground() != Color.green)
 			setBackground(Color.green);
 		else if(case_ == 1)
@@ -69,7 +67,10 @@ class Cellule extends JPanel {
 			setBackground(Color.white);
 	}
 
+
+	//!\ Méthode utile à l'initialisation de la grille de jeu
 	public boolean setBase(int val){
+
 		if (case_ == 0 && (val ==1 || val == 2)){
 			case_ = val;
 			etoile_ = true;
@@ -79,6 +80,7 @@ class Cellule extends JPanel {
 			else
 				setBackground(Color.red);
 
+			// Interface graphique de la case transformé en base
 			JLabel texte = new JLabel("*");
 			Font font = new Font("Serif", Font.BOLD, 20);
 			texte.setFont(font);

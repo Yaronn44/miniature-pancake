@@ -2,19 +2,25 @@ import java.util.*;
 
 class ClasseUnion{
 	
-
 	private ArrayList<Indice> classe_;
 	private int taille_;
 
+
+	//!\ Constructeur de la ClasseUnion
 	public ClasseUnion(int t){
+
+		//!\ Initialisation des variables
 		taille_ = t;
 		classe_ = new ArrayList<Indice>();
+
 		for (int x = 0; x < taille_*taille_; ++x) {
 			classe_.add(new Indice());
 		}
 	}
 
-	public void union(int x1, int y1, int x2, int y2){  			// v et w les classe des deux composantes à unir
+
+	//!\ Méthode d'union de la composante contenant la case de coordonnée (x1,y1) avec la composante contenant la case de coordonnée (x2, y2) par union pondérée
+	public void union(int x1, int y1, int x2, int y2){ 
 
 		int vRac = classe(x1,y1);
 		int wRac = classe(x2,y2);
@@ -35,6 +41,8 @@ class ClasseUnion{
 
 	}
 
+
+	//!\ Méthode retournant la classe d'une case de coordonnée (x, y) avec compression des chemins
 	public int classe(int x, int y){
 		if (classe_.get(x+y*taille_).getPere() == -1)
 			return (x+y*taille_);
@@ -45,14 +53,14 @@ class ClasseUnion{
 		}
 	}
 
-	//Getter
-	
+
+	//!\---------------------- Getters
 	public int getTaille(){
 
 		return taille_;
 	}
 
-
+	//!\ Permet d'obtenir tous les fils d'un Indice de la ClasseUnion (cette fonction est généralement appelé sur la racine)
 	public ArrayList<Integer> getTousFils(int x, int y){
 		
 		int t = classe_.get(x+y*taille_).getFils().size();
@@ -69,4 +77,5 @@ class ClasseUnion{
 			return tmp;
 		}
 	}
+	//!\---------------------- Fin Getters
 }

@@ -42,7 +42,22 @@ class FenetreMenu extends JFrame{
 
 					if ((taille >= 4 && taille <= 15) && (nb >= 2 && nb <= taille)) {
 						dispose();
-						Fenetre fenetre = new Fenetre("Un jeu de connexion", nb, taille, 1);
+						FenetreJeu fenetre = new FenetreJeu("Un jeu de connexion", nb, taille, 1);
+					}
+				}
+			}
+        });
+
+		jco.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a) {
+				if (nbBase.getValue() != null && tailleTab.getValue() != null ) {
+
+					int nb = Integer.parseInt(nbBase.getText());
+					int taille = Integer.parseInt(tailleTab.getText());
+
+					if ((taille >= 4 && taille <= 15) && (nb >= 2 && nb <= taille)) {
+						dispose();
+						FenetreJeu fenetre = new FenetreJeu("Un jeu de connexion", nb, taille, 2);
 					}
 				}
 			}
