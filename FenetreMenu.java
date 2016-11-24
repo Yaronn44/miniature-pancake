@@ -18,6 +18,7 @@ class FenetreMenu extends JFrame{
 	public FenetreMenu(){
 		super("Paramètre de la partie");
 
+		// Paramètre de la fenêtre
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
 		setLocationRelativeTo(null);
@@ -33,6 +34,7 @@ class FenetreMenu extends JFrame{
 		nbBase = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		tailleTab = new JFormattedTextField(NumberFormat.getIntegerInstance());
 
+		// Action du bouton joueur contre joueur
 		jcj.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				if (nbBase.getValue() != null && tailleTab.getValue() != null ) {
@@ -48,6 +50,7 @@ class FenetreMenu extends JFrame{
 			}
         });
 
+		// Action du bouton joueur contre ordinateur
 		jco.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
 				if (nbBase.getValue() != null && tailleTab.getValue() != null ) {
@@ -63,6 +66,7 @@ class FenetreMenu extends JFrame{
 			}
         });
 
+		// Agencement des différents composants graphique de la fenêtre
 		GroupLayout layout = new GroupLayout(this.getContentPane());
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);

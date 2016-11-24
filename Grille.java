@@ -72,7 +72,7 @@ class Grille extends JPanel {
 						break;
 					}
 				}
-			}while(tab_[nb1+nb2*taille_].getVal() != 0 || !possible);
+			}while(getVal(nb1, nb2) != 0 || !possible);
 				
 			// On transforme la Cellule en base si les conditions sont respectées et on ajoute ses coordonnées à l'ArrayList de stockage des bases
 			tab_[nb1+nb2*taille_].setBase(1);
@@ -101,7 +101,7 @@ class Grille extends JPanel {
 						break;
 					}
 				}
-			}while(tab_[nb1+nb2*taille_].getVal() != 0 || !possible);
+			}while(getVal(nb1, nb2) != 0 || !possible);
 				
 			// On transforme la Cellule en base si les conditions sont respectées et on ajoute ses coordonnées à l'ArrayList de stockage des bases
 			tab_[nb1+nb2*taille_].setBase(2);
@@ -182,7 +182,7 @@ class Grille extends JPanel {
 	//!\param x, y : les coordonnées de la case dont pour laquelle la composante sera affiché
 	public void afficheComposante(int x, int y){
 
-		if (tab_[x+y*taille_].getVal() != 0) {
+		if (getVal(x, y) != 0) {
 
 			java.util.Timer t = new java.util.Timer();
 
@@ -303,7 +303,7 @@ class Grille extends JPanel {
 								continue;
 
 							// Si c'est une case blanche alors...
-							if (tab_[(xTmp+j)+(yTmp+i)*taille_].getVal() == 0){
+							if (getVal(xTmp+j, yTmp+i) == 0){
 
 								// Si elle est adjacente à la case d'arriver on retourne le compteur+1
 								if (distanceCase(xTmp+j, yTmp+i, z, t) == 0)
@@ -316,7 +316,7 @@ class Grille extends JPanel {
 								}
 							}
 							// ...sinon si elle est de la même couleur que la case actuelle alors...
-							else if (tab_[(xTmp+j)+(yTmp+i)*taille_].getVal() == getVal(x, y)) {
+							else if (getVal(xTmp+j, yTmp+i) == getVal(x, y)) {
 
 
 								// Si elle n'appartient pas aux cases impossibles alors...
@@ -397,7 +397,7 @@ class Grille extends JPanel {
 												if (i2 != 0 || j2 != 0) {
 
 													// Si c'est une case blanche alors...
-													if (tab_[(xTmp2+j2)+(yTmp2+i2)*taille_].getVal() == 0){
+													if (getVal(xTmp2+j2, yTmp2+i2) == 0){
 
 														// Si elle est adjacente à la case d'arriver on retourne le compteur+1
 														if(distanceCase(xTmp2+j2, yTmp2+i2, z, t) == 0)
@@ -410,7 +410,7 @@ class Grille extends JPanel {
 														}
 													}
 													// Sinon si c'est une case de couleur adverse on l'ajoute au tableau de case impossible (si elle n'y est pas déjà)
-													else if (tab_[(xTmp2+j2)+(yTmp2+i2)*taille_].getVal() != getVal(x, y)){
+													else if (getVal(xTmp2+j2, yTmp2+i2) != getVal(x, y)){
 
 														if (!caseImp.contains(((xTmp+j2)+(yTmp+i2)*taille_)))
 															caseImp.add(((xTmp2+j2)+(yTmp2+i2)*taille_));
@@ -473,11 +473,12 @@ class Grille extends JPanel {
 
 	//!\brief Méthode n°7 relieComposantes
 	//!\param x, y, c : x et y les coordonnées de la case à tester; c la couleur de la case à tester
-	//!\return un entier étant le nombre de composantes que la coloration de la case pourrait relier
-	public int relieComposantes(int x, int y, int c){
+	//!\return un ArrayList d'entier contenant la position des cases concernées
+	public ArrayList<Integer> relieComposantes(int x, int y, int c){
 
 		ArrayList<Integer> tmp = new ArrayList<Integer>();
-		int compt = 0;
+		ArrayList<Integer> res = new ArrayList<Integer>();
+
 		int xDep = 0;
 		int yDep = 0;
 		int xArr = 0;
@@ -529,32 +530,37 @@ class Grille extends JPanel {
 					continue;
 
 				// Si la case adjacente est de la même couleur que la case actuelle et que l'ArrayList temporaire est vide, on ajoute la classe de la case adjacente dans l'ArrayList
-				if (tab_[(x+l)+(y+k)*taille_].getVal() == c && tmp.size() == 0)
+				if (getVal(x+l, y+k) == c && tmp.size() == 0){
 					tmp.add(classe_.classe(x+l, y+k));
-
+					res.add((x+l)+(y+k)*taille_);
+				}
 				// Sinon si la case adjacente est de la même couleur que la case actuelle alors...
-				else if (tab_[(x+l)+(y+k)*taille_].getVal() == c){
+				else if (getVal(x+l, y+k) == c){
+
 					boolean newComp = true;
 					// ... pour toutes les valeur de tmp...
 					for (int i = 0; i < tmp.size(); ++i) {
 
 						// ... on test si la classe de la case adjacente n'est pas déjà dedans, si ce n'est pas le cas on incrément le compteur et on ajoute sa classe dans tmp
-						if (!existeCheminCases(x+l, y+k, tmp.get(i)%taille_, tmp.get(i)/taille_)){
+						if (existeCheminCases(x+l, y+k, tmp.get(i)%taille_, tmp.get(i)/taille_)){
 							newComp = false;
 						}
 					}
 					if (newComp) {
 						tmp.add(classe_.classe(x+l, y+k));
-						compt++;
+						res.add((x+l)+(y+k)*taille_);
 					}
 				}
 			}
 		}
 
+		return res;
 
-		return compt;
 	}
 
+	//!\brief Méthode n°9.1 evaluerCase1
+	//!\param x, y, j : x et y les coordonnées de la case à tester; j le joueur pour lequel la fonction est utilisé
+	//!\return un entier étant l'index dans la grille de la case à colorié
 	public int evaluerCase1(int x, int y, int j){
 		if(j == 1){
 			if(getVal(x, y) != 0)
@@ -573,64 +579,16 @@ class Grille extends JPanel {
 
 	// ------------------------------------------ Méthodes supplémentaires
 
-	public void union(int x, int y, int c){
+	//!\ Fait l'union entre les cases de coordonnées (x, y) et (z, t)
+	public void union(int x, int y, int z, int t){
 
-	
-		int xDep = 0;
-		int yDep = 0;
-		int xArr = 0;
-		int yArr = 0;
+		classe_.union(x, y, z, t);
 
-		if (x == 0){
-			if( y == 0){
-				xDep = 0; yDep = 0; xArr = 1; yArr = 1;
-			}
-			else if(y == taille_ - 1){
-				xDep = 0; yDep = -1; xArr = 1; yArr = 0;
-			}
-			else {
-				xDep = 0; yDep = -1; xArr = 1; yArr = 1;
-			}
-		}
-		else if (x == taille_ - 1){
-			if( y == 0){
-				xDep = -1; yDep = 0; xArr = 0; yArr = 1;
-			}
-			else if(y == taille_ - 1){
-				xDep = -1; yDep = -1; xArr = 0; yArr = 0;
-			}
-			else {
-				xDep = -1; yDep = -1; xArr = 0; yArr = 1;
-			}
-		}
-		else{
-			if( y == 0){
-				xDep = -1; yDep = 0; xArr = 1; yArr = 1;
-			}
-			else if(y == taille_-1){
-				xDep = -1; yDep = -1; xArr = 1; yArr = 0;
-			}
-			else {
-				xDep = -1; yDep = -1; xArr = 1; yArr = 1;
-			}
-		}
-
-		for (int k = yDep; k <= yArr; ++k) {
-				for (int l = xDep; l <= xArr;  ++l) {
-
-					if (k == 0 && l == 0) 		
-						continue;
-					
-					if (tab_[(x+l)+(y+k)*taille_].getVal() == c && !existeCheminCases(x+l, y+k, x, y)) {
-						classe_.union(x, y, x+l, y+k);
-						return;
-				}
-			}
-		}
 	}
 
-
+	//!\ Retourne la distance entre deux cases (non comprises)
 	public int distanceCase(int x, int y, int z, int t){
+
 		int tmp1 = Math.abs(x-z);
 		int tmp2 = Math.abs(y-t);
 		return Math.max(tmp1, tmp2) - 1;
@@ -638,7 +596,7 @@ class Grille extends JPanel {
 	}
 	
 
-	// A SUPPRIMER NORMALEMENT (aucune utilité)
+	// A SUPPRIMER NORMALEMENT (aucune utilité, peut être pour IA enfaite)
 	public ArrayList<Integer> triTab(ArrayList<Integer> tab, int z, int t){
 
 		ArrayList<Integer> res = new ArrayList<Integer>();	
