@@ -22,20 +22,20 @@ class ClasseUnion{
 	//!\ Méthode d'union de la composante contenant la case de coordonnée (x1,y1) avec la composante contenant la case de coordonnée (x2, y2) par union pondérée
 	public void union(int x1, int y1, int x2, int y2){ 
 
-		int vRac = classe(x1,y1);
-		int wRac = classe(x2,y2);
-		int tv = getTousFils(vRac%taille_, vRac/taille_).size();
-		int tw = getTousFils(wRac%taille_, wRac/taille_).size();
+		int vRac_ = classe(x1,y1);
+		int wRac_ = classe(x2,y2);
+		int tv_ = getTousFils(vRac_%taille_, vRac_/taille_).size();
+		int tw_ = getTousFils(wRac_%taille_, wRac_/taille_).size();
 
-
-		if (vRac != wRac) {
-			if (tv <= tw) {
-				classe_.get(vRac).setPere(wRac);
-				classe_.get(wRac).ajouterFils(vRac);
+		// On ajoute l'arbre le plus petit en fils de l'abre le plus grand
+		if (vRac_ != wRac_) {
+			if (tv_ <= tw_) {
+				classe_.get(vRac_).setPere(wRac_);
+				classe_.get(wRac_).ajouterFils(vRac_);
 			}
 			else{
-				classe_.get(wRac).setPere(vRac);
-				classe_.get(vRac).ajouterFils(wRac);
+				classe_.get(wRac_).setPere(vRac_);
+				classe_.get(vRac_).ajouterFils(wRac_);
 			}
 		}
 
@@ -47,9 +47,9 @@ class ClasseUnion{
 		if (classe_.get(x+y*taille_).getPere() == -1)
 			return (x+y*taille_);
 		else{	
-			int a = classe(classe_.get(x+y*taille_).getPere()%taille_, classe_.get(x+y*taille_).getPere()/taille_);
-			classe_.get(x+y*taille_).setPere(a);
-			return a;	
+			int a_ = classe(classe_.get(x+y*taille_).getPere()%taille_, classe_.get(x+y*taille_).getPere()/taille_);
+			classe_.get(x+y*taille_).setPere(a_);
+			return a_;	
 		}
 	}
 
@@ -63,15 +63,15 @@ class ClasseUnion{
 	//!\ Permet d'obtenir tous les fils d'un Indice de la ClasseUnion (cette fonction est généralement appelé sur la racine)
 	public ArrayList<Integer> getTousFils(int x, int y){
 		
-		int t = classe_.get(x+y*taille_).getFils().size();
+		int t_ = classe_.get(x+y*taille_).getFils().size();
 
-		if (t == 0)
+		if (t_ == 0)
 			return (new ArrayList<Integer>());
 
 		else{
 			ArrayList<Integer> tmp = new ArrayList<Integer>();
 			tmp.addAll(classe_.get(x+y*taille_).getFils());
-			for (int i = 0; i < t; ++i)
+			for (int i = 0; i < t_; ++i)
 				tmp.addAll(getTousFils(tmp.get(i)%taille_, tmp.get(i)/taille_));
 
 			return tmp;

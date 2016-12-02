@@ -10,63 +10,63 @@ import java.text.NumberFormat;
 
 class FenetreMenu extends JFrame{
 
-	private JButton jcj, jco;
-	private JLabel texteSelec, texteNbBase, texteTailleTab;
-	private JFormattedTextField nbBase;
-	private JFormattedTextField tailleTab;
+	private JButton jcj_, jco_;
+	private JLabel texteSelec_, texteNbBase_, texteTailleTab_;
+	private JFormattedTextField nbBase_, tailleTab_;
 
 	public FenetreMenu(){
 		super("Paramètre de la partie");
 
-		// Paramètre de la fenêtre
+		//------------------------------------------------------------------- Paramétrage de la fenêtre 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(true);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
 
-		jcj = new JButton("Joueur contre Joueur");
-		jco = new JButton("Joueur contre Ordi");
+		//------------------------------------------------------------------- Instanciation de la fenêtre et de son contenu
+		jcj_ = new JButton("Joueur contre Joueur");
+		jco_ = new JButton("Joueur contre Ordi");
 
-		texteSelec = new JLabel("Veuillez séléctionner le mode de jeu souhaité :");
-		texteTailleTab = new JLabel("Taille de la grille (4 <= taille <= 15) : ");
-		texteNbBase = new JLabel("Nombre de base (2 <= nombre base <= taille) : ");
+		texteSelec_ = new JLabel("Veuillez séléctionner le mode de jeu souhaité :");
+		texteTailleTab_ = new JLabel("Taille de la grille (4 <= taille <= 15) : ");
+		texteNbBase_ = new JLabel("Nombre de base (2 <= nombre base <= taille) : ");
 
-		nbBase = new JFormattedTextField(NumberFormat.getIntegerInstance());
-		tailleTab = new JFormattedTextField(NumberFormat.getIntegerInstance());
+		nbBase_ = new JFormattedTextField(NumberFormat.getIntegerInstance());
+		tailleTab_ = new JFormattedTextField(NumberFormat.getIntegerInstance());
 
-		// Action du bouton joueur contre joueur
-		jcj.addActionListener(new ActionListener(){
+		//------------------------------------------------------------------- Action du bouton joueur contre joueur
+		jcj_.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
-				if (nbBase.getValue() != null && tailleTab.getValue() != null ) {
+				if (nbBase_.getValue() != null && tailleTab_.getValue() != null ) {
 
-					int nb = Integer.parseInt(nbBase.getText());
-					int taille = Integer.parseInt(tailleTab.getText());
+					int nb_ = Integer.parseInt(nbBase_.getText());
+					int taille_ = Integer.parseInt(tailleTab_.getText());
 
-					if ((taille >= 4 && taille <= 15) && (nb >= 2 && nb <= taille)) {
+					if ((taille_ >= 4 && taille_ <= 15) && (nb_ >= 2 && nb_ <= taille_)) {
 						dispose();
-						FenetreJeu fenetre = new FenetreJeu("Un jeu de connexion", nb, taille, 1);
+						FenetreJeu fenetre_ = new FenetreJeu("Un jeu de connexion", nb_, taille_, 1);
 					}
 				}
 			}
         });
 
-		// Action du bouton joueur contre ordinateur
-		jco.addActionListener(new ActionListener(){
+		//------------------------------------------------------------------- Action du bouton joueur contre ordinateur
+		jco_.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent a) {
-				if (nbBase.getValue() != null && tailleTab.getValue() != null ) {
+				if (nbBase_.getValue() != null && tailleTab_.getValue() != null ) {
 
-					int nb = Integer.parseInt(nbBase.getText());
-					int taille = Integer.parseInt(tailleTab.getText());
+					int nb_ = Integer.parseInt(nbBase_.getText());
+					int taille_ = Integer.parseInt(tailleTab_.getText());
 
-					if ((taille >= 4 && taille <= 15) && (nb >= 2 && nb <= taille)) {
+					if ((taille_ >= 4 && taille_ <= 15) && (nb_ >= 2 && nb_ <= taille_)) {
 						dispose();
-						FenetreJeu fenetre = new FenetreJeu("Un jeu de connexion", nb, taille, 2);
+						FenetreJeu fenetre_ = new FenetreJeu("Un jeu de connexion", nb_, taille_, 2);
 					}
 				}
 			}
         });
 
-		// Agencement des différents composants graphique de la fenêtre
+		//------------------------------------------------------------------- Agencement des différents composants graphique de la fenêtre
 		GroupLayout layout = new GroupLayout(this.getContentPane());
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
@@ -74,30 +74,30 @@ class FenetreMenu extends JFrame{
 		layout.setHorizontalGroup( 
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(texteSelec)
-					.addComponent(texteTailleTab)
-					.addComponent(texteNbBase))
+					.addComponent(texteSelec_)
+					.addComponent(texteTailleTab_)
+					.addComponent(texteNbBase_))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(jcj)
-					.addComponent(tailleTab)
-					.addComponent(nbBase))
+					.addComponent(jcj_)
+					.addComponent(tailleTab_)
+					.addComponent(nbBase_))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(jco))
+					.addComponent(jco_))
 		);
 
 
 		layout.setVerticalGroup( 
 			layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(texteSelec)
-					.addComponent(jcj)
-					.addComponent(jco))
+					.addComponent(texteSelec_)
+					.addComponent(jcj_)
+					.addComponent(jco_))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(texteTailleTab)
-					.addComponent(tailleTab))
+					.addComponent(texteTailleTab_)
+					.addComponent(tailleTab_))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(texteNbBase)
-					.addComponent(nbBase))
+					.addComponent(texteNbBase_)
+					.addComponent(nbBase_))
 		);
 
 		getContentPane().setLayout(layout);
