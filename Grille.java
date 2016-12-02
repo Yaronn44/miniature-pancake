@@ -26,12 +26,12 @@ class Grille extends JPanel {
 		classe_ = new ClasseUnion(t);
 		posBaseJ1_ = new ArrayList<Integer>();
 		posBaseJ2_ = new ArrayList<Integer>();
-		Dimension d = new Dimension(dim_, dim_);
+		Dimension d_ = new Dimension(dim_, dim_);
 
 
 		//-------------------------------------------------------------------  Paramétrage graphique de la grille
 		setBackground(Color.BLACK);
-		setPreferredSize(d);
+		setPreferredSize(d_);
 
 
 		//-------------------------------------------------------------------  Ajout d'un conteneur d'éléments en grille
@@ -216,10 +216,10 @@ class Grille extends JPanel {
 	}
 
 
-	//!\brief Méthode n°4 relieCaseMin
+	//!\brief Méthode n°4 relierCasesMin
 	//!\param x, y, z, t : x et y les coordonnées de la première case; z et t les coordonnées de la seconde case;
 	//!\return compt_ : le nombre minimum de cases blanche à colorié afin de rejoindre les deux cases. Retourne -1 si les deux cases sont d'une couleur différente
-	public int relieCaseMin(int x, int y, int z, int t){
+	public int relierCasesMin(int x, int y, int z, int t){
 
 		int compt_ = 0;
 
@@ -227,24 +227,23 @@ class Grille extends JPanel {
 		if(getVal(x, y) == getVal(z, t)){
 
 			ArrayList<Integer> caseImp_ = new ArrayList<Integer>();		// ArrayList permettant d'éviter de retourner sur une case déjà étudié
-			ArrayList<Integer> caseWait_ = new ArrayList<Integer>();		// ArrayList de stockage de cases disponibles pour le tour en cours
-			ArrayList<Integer> caseAcc_ = new ArrayList<Integer>();		// ArrayList de stockage des cases disponibles pour le tour suivant
+			ArrayList<Integer> caseAct_ = new ArrayList<Integer>();		// ArrayList de stockage de cases disponibles pour le tour en cours
+			ArrayList<Integer> caseWait_ = new ArrayList<Integer>();		// ArrayList de stockage des cases disponibles pour le tour suivant
 
-			caseAcc_.add(x+y*taille_);
 			caseWait_.add(x+y*taille_);
+			caseAct_.add(x+y*taille_);
 			caseImp_.add(x+y*taille_);
 			
-			for (int v = 0; v < taille_*taille_; ++v) {						
+			while(caseWait_.size() > 0) {						
 
+				caseAct_.clear();
+				caseAct_.addAll(caseWait_);
 				caseWait_.clear();
-				caseWait_.addAll(caseAcc_);
-				caseAcc_.clear();
 
-				for (int a = 0; a < caseWait_.size(); ++a) {
+				for (int a = 0; a < caseAct_.size(); ++a) {
 
-
-					int xtmp_ = caseWait_.get(a)%taille_;
-					int ytmp_ = caseWait_.get(a)/taille_;
+					int xtmp_ = caseAct_.get(a)%taille_;
+					int ytmp_ = caseAct_.get(a)/taille_;
 
 					// Pour chaque case on attribu des valeurs différentes pour la double boucle à suivre afin d'éviter
 					// que le programme essaye d'effectuer ses test sur des cases extérieurs au tableau (-1 par exemple)
@@ -267,7 +266,7 @@ class Grille extends JPanel {
 
 								// Si elle n'appartient pas au cases imposibles on l'ajoute dans le tableau de case pour le tour suivant ainsi qu'au tableau de cases impossible_
 								if (!caseImp_.contains(((xtmp_+j)+(ytmp_+i)*taille_))){
-									caseAcc_.add(((xtmp_+j)+(ytmp_+i)*taille_));
+									caseWait_.add(((xtmp_+j)+(ytmp_+i)*taille_));
 									caseImp_.add(((xtmp_+j)+(ytmp_+i)*taille_));
 								}
 							}
@@ -326,7 +325,7 @@ class Grille extends JPanel {
 
 														// Sinon si elle n'appartient pas au cases imposibles on l'ajoute dans le tableau de case pour le tour suivant ainsi qu'au tableau de cases impossible_
 														if (!caseImp_.contains(((xtmp2_+j2)+(ytmp2_+i2)*taille_))){
-															caseAcc_.add(((xtmp2_+j2)+(ytmp2_+i2)*taille_));
+															caseWait_.add(((xtmp2_+j2)+(ytmp2_+i2)*taille_));
 															caseImp_.add(((xtmp2_+j2)+(ytmp2_+i2)*taille_));
 														}
 													}
@@ -357,7 +356,7 @@ class Grille extends JPanel {
 						}
 					}
 					// Si le tableau pour le tour suivant est vide c'est que la case est bloqué dans un coin, donc on l'ajoute au tableau des cases impossible_s
-					if (caseAcc_.isEmpty()){
+					if (caseWait_.isEmpty()){
 						caseImp_.add((xtmp_+ytmp_*taille_));
 					}
 				}
@@ -396,43 +395,38 @@ class Grille extends JPanel {
 	//!\param x, y, c : x et y les coordonnées de la case à tester; c la couleur de la case à tester
 	//!\return un ArrayList d'entier contenant la position des cases concernées
 	public ArrayList<Integer> relieComposantes(int x, int y, int c){
-
-		ArrayList<Integer> tmp_ = new ArrayList<Integer>();
+		
 		ArrayList<Integer> res_ = new ArrayList<Integer>();
+		if (getVal(x, y) == 0) {
 
-		// On attribu des valeurs différentes pour la double boucle à suivre afin d'éviter
-		// que le programme essaye d'effectuer ses test sur des cases extérieurs au tableau (-1 par exemple)
-		ArrayList<Integer> valXY_ = new ArrayList<Integer>();
-		valXY_ = xyDebArr(x, y);
+			// On attribu des valeurs différentes pour la double boucle à suivre afin d'éviter
+			// que le programme essaye d'effectuer ses test sur des cases extérieurs au tableau (-1 par exemple)
+			ArrayList<Integer> valXY_ = new ArrayList<Integer>();
+			valXY_ = xyDebArr(x, y);
 
-		// Double boucle qui permet de tester toutes les cases adjacentes la case actuelle
-		for (int k = valXY_.get(1); k <=  valXY_.get(3); ++k) {
-			for (int l =  valXY_.get(0); l <=  valXY_.get(2);  ++l) {
+			// Double boucle qui permet de tester toutes les cases adjacentes la case actuelle
+			for (int k = valXY_.get(1); k <=  valXY_.get(3); ++k) {
+				for (int l =  valXY_.get(0); l <=  valXY_.get(2);  ++l) {
 
-				// Si c'est la case actuelle on la passe (aucun intérêt à la tester)
-				if (k == 0 && l == 0) 		
-					continue;
+					// Si c'est la case actuelle on la passe (aucun intérêt à la tester)
+					if (k == 0 && l == 0) 		
+						continue;
 
-				// Si la case adjacente est de la même couleur que la case actuelle et que l'ArrayList temporaire est vide, on ajoute la classe de la case adjacente dans l'ArrayList
-				if (getVal(x+l, y+k) == c && tmp_.size() == 0){
-					tmp_.add(classe_.classe(x+l, y+k));
-					res_.add((x+l)+(y+k)*taille_);
-				}
-				// Sinon si la case adjacente est de la même couleur que la case actuelle alors...
-				else if (getVal(x+l, y+k) == c){
+					// Si la case adjacente est de la même couleur que la case actuelle et que l'ArrayList temporaire est vide, on ajoute la classe de la case adjacente dans l'ArrayList
+					if (getVal(x+l, y+k) == c){
 
-					boolean newComp_ = true;
-					// ... pour toutes les valeur de tmp_...
-					for (int i = 0; i < tmp_.size(); ++i) {
+						boolean newComp_ = true;
+						// ... pour toutes les valeur de tmp_...
+						for (int i = 0; i < res_.size(); ++i) {
 
-						// ... on test si la classe de la case adjacente n'est pas déjà dedans, si ce n'est pas le cas on incrément le compt_eur et on ajoute sa classe dans tmp_
-						if (existeCheminCases(x+l, y+k, tmp_.get(i)%taille_, tmp_.get(i)/taille_)){
-							newComp_ = false;
+							// ... on test si la classe de la case adjacente n'est pas déjà dedans, si ce n'est pas le cas on incrément le compt_eur et on ajoute sa classe dans tmp_
+							if (existeCheminCases(x+l, y+k, res_.get(i)%taille_, res_.get(i)/taille_)){
+								newComp_ = false;
+							}
 						}
-					}
-					if (newComp_) {
-						tmp_.add(classe_.classe(x+l, y+k));
-						res_.add((x+l)+(y+k)*taille_);
+						if (newComp_) {
+							res_.add((x+l)+(y+k)*taille_);
+						}
 					}
 				}
 			}
