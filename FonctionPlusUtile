@@ -1,0 +1,152 @@
+	
+public void afficher(int x, int y){
+	System.out.println("Pere : "+classe_.classe(x,y));
+
+	int t = getComp(x,y);
+	ArrayList<Integer> tmp = new ArrayList<Integer>();
+	tmp.addAll(classe_.getTousFils(t%taille_, t/taille_));
+	for (int i = 0; i < tmp.size(); ++i) {
+		System.out.println(tmp.get(i));
+	}
+}
+
+public ArrayList<Integer> triTab(ArrayList<Integer> tab, int z, int t){
+
+	ArrayList<Integer> res = new ArrayList<Integer>();	
+
+	while(!tab.isEmpty()){
+
+		int min = taille_;
+		int pos = 0;
+
+		for (int i = 0; i < tab.size(); ++i) {
+
+			if (distanceCase(tab.get(i)%taille_, tab.get(i)/taille_, z, t) < min) {
+				min = distanceCase(tab.get(i)%taille_, tab.get(i)/taille_, z, t);
+				pos = i;
+			}
+		}
+
+		res.add(tab.get(pos));
+		tab.remove(pos);
+	}
+
+	return res;
+}
+
+// CONNAITRE COMP
+b2.addActionListener(new ActionListener(){
+	public void actionPerformed(ActionEvent a) {
+		suppr();
+		grille.addMouseListener(new MouseAdapter(){
+        		public void mousePressed(MouseEvent e){
+    				System.out.println(grille.getComp((e.getX()-1)/50, (e.getY()-1)/50));
+    				suppr();
+    				if (choix == 1) 
+    					joueDeuxHumains();
+    				else if(choix == 2)
+    					joueOrdiHumain();
+    				
+        		}
+        });
+	}
+});
+
+
+// CONNAITRE VAL
+b3.addActionListener(new ActionListener(){
+	public void actionPerformed(ActionEvent a) {
+		suppr();
+		grille.addMouseListener(new MouseAdapter(){
+        		public void mousePressed(MouseEvent e){
+    				System.out.println(grille.getVal((e.getX()-1)/50, (e.getY()-1)/50));
+    				suppr();
+    				if (choix == 1) 
+    					joueDeuxHumains();
+    				else if(choix == 2)
+    					joueOrdiHumain();
+    				
+        		}
+        });
+	}
+});
+
+
+// distanceCase
+b5.addActionListener(new ActionListener(){
+	public void actionPerformed(ActionEvent a) {
+		suppr();
+		grille.addMouseListener(new MouseAdapter(){
+    		public void mousePressed(MouseEvent e){
+				if (compt == 0){
+					posTmpX = (e.getX()-1)/50;
+					posTmpY = (e.getY()-1)/50;
+					++compt;
+				}
+				else{
+					System.out.println(grille.distanceCase(posTmpX, posTmpY, (e.getX()-1)/50, (e.getY()-1)/50));
+					suppr();
+					if (choix == 1)
+						joueDeuxHumains();
+					else if(choix == 2)
+						joueOrdiHumain();
+					--compt;
+				}
+			}
+        });
+	}
+});
+
+
+
+
+//------------------------------------------------------------------- Bouton pour abandonner
+b8.addActionListener(new ActionListener(){
+	public void actionPerformed(ActionEvent a){
+
+		JFrame aband = new JFrame("Tentatived'abandon de la part du joueur n°"+(joueur == 1 ? 1 : 2)+"(c'est lache, très lache)");
+
+		aband.setSize(600,100);
+		aband.setLocationRelativeTo(null);
+		aband.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);   
+		aband.setVisible(true);
+
+		JButton oui = new JButton("Oui");
+		JButton non = new JButton("Non");
+		oui.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				aband.dispose();
+				FenetreMenu newF = new FenetreMenu();
+			}
+		});
+
+		non.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent arg0) {aband.dispose();}});
+
+		GridLayout layout = new GridLayout(1, 2,2 ,2);
+		aband.setLayout(layout);
+
+		aband.add(oui);
+		aband.add(non);
+	}
+});
+
+
+
+
+//getTousFils
+b10.addActionListener(new ActionListener(){
+	public void actionPerformed(ActionEvent a) {
+		suppr();
+		grille.addMouseListener(new MouseAdapter(){
+        		public void mousePressed(MouseEvent e){
+        			grille.afficher((e.getX()-1)/50,(e.getY()-1)/50);
+    				suppr();
+    				if (choix == 1) 
+    					joueDeuxHumains();
+    				else if(choix == 2)
+    						joueOrdiHumain();
+        		}
+        });
+	}
+});

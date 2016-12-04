@@ -12,7 +12,7 @@ class FenetreJeu extends JFrame{
 	private Grille grille_;
 	private JPanel menu_;
 	private JLabel affScoreJ1_, affScoreJ2_, affTour_;
-	private JButton b1_, b2_, b3_, b4_, b5_, b6_, b7_;
+	private JButton b1_, b2_, b3_, b4_, b5_, b6_, b7_, b8_;
 	private int joueur_, scoreJ1_, scoreJ2_, nbBase_, taille_, choix_, compt_, posTmpX_, posTmpY_;
 	private ArrayList<Integer> listeCoup_, evaluer_;
 	private boolean vJ1_, vJ2_;
@@ -70,7 +70,7 @@ class FenetreJeu extends JFrame{
 		b5_ = new JButton("Relie Composante");
 		b6_ = new JButton("evaluer_ Case 1");
 		b7_ = new JButton("Abandon");
-
+		b8_ = new JButton("Abandon");
 
 		//------------------------------------------------------------------- Bouton pour afficheComposante
         b1_.addActionListener(new ActionListener(){
@@ -234,6 +234,23 @@ class FenetreJeu extends JFrame{
         	}
         });
 
+		b8_.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent a) {
+				suppr();
+				grille_.addMouseListener(new MouseAdapter(){
+		        		public void mousePressed(MouseEvent e){
+		    				System.out.println(grille_.getComp((e.getX()-1)/50, (e.getY()-1)/50));
+		    				suppr();
+		    				if (choix_ == 1) 
+		    					joueDeuxHumains();
+		    				else if(choix_ == 2)
+		    					joueOrdiHumain();
+		    				
+		        		}
+		        });
+			}
+		});
+
 
         //------------------------------------------------------------------- Ajout des boutons au menu
         menu_.add(b1_);
@@ -243,6 +260,7 @@ class FenetreJeu extends JFrame{
 		menu_.add(b5_);
 		menu_.add(b6_);
 		menu_.add(b7_);
+		menu_.add(b8_);
 
 
 		//------------------------------------------------------------------- Agencement des différents composants graphique de la fenêtre
@@ -310,10 +328,13 @@ class FenetreJeu extends JFrame{
     				// On ajoute la position de tous les composantes disponible dans un ArrayList
     				ArrayList<Integer> tmp = new ArrayList<Integer>();
     				tmp.addAll(grille_.relieComposantes((e.getX()-1)/50, (e.getY()-1)/50, joueur_));
+    				System.out.println(joueur_);
 
     				// Puis on fait l'union entre toutes les composantes
-    				for (int i = 0; i < tmp.size(); ++i)
+    				for (int i = 0; i < tmp.size(); ++i){
+    					System.out.println("comp : " + tmp.get(i));
     					grille_.union((e.getX()-1)/50, (e.getY()-1)/50, tmp.get(i)%taille_, tmp.get(i)/taille_);
+    				}
 
     				// On récupère le nombre de base présentes dans la nouvelle composante
  					int scoreTmp = grille_.nombreEtoiles((e.getX()-1)/50, (e.getY()-1)/50);

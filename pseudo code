@@ -1,0 +1,226 @@
+Fonction afficheComposante(entier x, entier y)
+Début
+	Si(TCase[x+y*taille_].valeur != 0) alors
+
+		entier tmp[];
+		tmp.ajouter(TComp[x+y*taille_].all);
+		
+		Pour i de 0 à 5
+			Pour i de 0 à tmp.taille-1 faire
+				Clignotement en vert de la case tmp[i];
+			finPour
+			Pause de 1 sec;
+		FinPour
+Fin
+
+
+
+Fonction colorerCase (entier val) : booléen
+Début
+	Si (valeur = 0 et (val = 1 ou val = 2)) alors
+		valeur ← val;	
+		Si (val = 1) alors
+			Change couleur case en bleu;
+		Sinon
+			Change couleur case en rouge;
+		FinSi
+
+		retourner vrai;
+	Sinon
+		retourner faux;
+	FinSi
+Fin
+
+Fonction existeCheminCases(entier x, entier y, entier z, entier t) : booléen
+
+	Si(TComp[x+y*taille_] = TComp[z+t*taille_]) alors
+		retourner vrai ;
+	Sinon
+		retourner faux ;
+	FinSi
+Fin
+
+
+
+Fonction nombreEtoiles(entier x, entier y) : entier
+Début
+	entier compt ← 0;
+	entier tmp[];
+	tmp.ajouter( TComp[x+y*taille_].all);
+
+	Pour i de 0 à tmp.taille-1 faire
+		Si(TCase[tmp[i]].estBase) alors
+			compt ← compt +1;
+		Finsi		
+	FinPour
+	retourner compt;
+Fin
+
+
+Fonction nombreEtoiles(entier x, entier y) : entier
+Début
+	entier compt ← 0;
+	entier tmp[];
+	tmp.ajouter( TComp[x+y*taille_].all);
+
+	Pour i de 0 à tmp.taille-1 faire
+		Si(TCase[tmp[i]].estBase) alors
+			compt ← compt +1;
+		Finsi		
+	FinPour
+	retourner compt;
+Fin
+
+
+
+Fonction joueDeuxHumains()
+Début
+	Pour chaque clique de souris sur la grille faire
+		Si(TCase[coordCliqueTab].colorerCase(joueur)) alors
+			listeCoup.ajouter(coordCliqueTab);
+			entier tmp[] ← relieComposante(coordCliqueTab, joueur);
+			Pour i de 0 à tmp.taille–1 faire
+				union(TComp[tmp[i]], Tcomp[coordCliqueTab]);
+			FinPour
+			entier scoreTmp ← nombreEtoiles(coordCliqueTab);
+			Si(joueur = 1) alors
+				Si(scoreTmp > 1 et scoreTmp > scoreJ1) alors
+					scoreJ1 ← scoreTmp;
+					afficheScores();
+					Si(scoreJ1 > scoreJ2) alors
+						victoireJ1 ← vrai; victoireJ2 ← faux;
+					FinSi
+				FinSi
+				joueur ← joueur + 1;
+			Sinon Si (joueur = 2) alors
+				Si(scoreTmp > 1 et scoreTmp > scoreJ2) alors
+					scoreJ2 ← scoreTmp;
+					afficheScores();
+					Si(scoreJ2 > scoreJ1) alors
+						victoireJ2 ← vrai; victoireJ1 ← faux;
+					FinSi
+				FinSi
+				joueur ← joueur - 1;
+			FinSi
+			testFinPartie();
+		Sinon
+			affiche message d'erreur;
+		FinSi
+	FinPour
+Fin
+
+
+Fonction evaluerCase1(entier x, entier y, entier j) : entier
+Début
+	Si(j = 1) alors
+		Si(TCase[x+y*taille_.valeur != 0) alors
+			retourner taille_;
+		Sinon
+			retourner distanceCase(x, y, xCentreJ1, yCentreJ1);
+		FinSi
+	Sinon si (j = 2) alors
+		Si(TCase[x+y*taille_.valeur != 0) alors
+			retourner taille_;
+		Sinon
+			retourner distanceCase(x, y, xCentreJ1, yCentreJ1);
+		FinSi
+	FinSi
+	retourner taille_;
+Fin
+
+
+Fonction joueOrdiHumain()
+Début
+	Pour chaque clique de souris sur la grille faire
+		Si(TCase[coordCliqueTab].colorerCase(1)) alors
+			listeCoup.ajouter(coordCliqueTab);
+			entier tmp[] ← relieComposante(coordCliqueTab, 1);
+			Pour i de 0 à tmp.taille–1 faire
+				union(TComp[tmp[i]], TComp[coordCliqueTab]);
+			FinPour
+			entier scoreTmp ← nombreEtoiles(coordCliqueTab);
+			Si(scoreTmp > 1 et scoreTmp > scoreJ1) alors
+				scoreJ1 ← scoreTmp;
+				afficheScores();
+				Si(scoreJ1 > scoreJ2) alors
+					victoireJ1 ← vrai; victoireJ2 ← faux;
+				FinSi
+			FinSi
+			joueur ← joueur + 1;
+
+			Si(non testFinPartie()) alors
+				entier coupOrdi = trouverCase1(2);
+				TCase[coupOrdi].colorerCase(2);
+				listeCoup.ajouter(coupOrdi);
+				tmp.clear();
+				tmp.ajouter(relieComposante(coordCliqueTab, 2) ;
+				Pour i de 0 à tmp.taille-1 faire
+					union(TComp[tmp[i], TComp[coordCliqueTab]);
+				FinPour
+				scoreTmp ← nombreEtoiles(coupOrdi);
+				Si(scoreTmp > 1 et scoreTmp > scoreJ2) alors
+					scoreJ2 ← scoreTmp;
+					afficheScores();
+					Si(scoreJ2 > scoreJ1) alors
+						victoireJ2 ← vrai; victoireJ1 ← faux;
+					FinSi
+				FinSi
+				joueur ← joueur – 1;
+				testFinPartie();
+			FinSi
+		Sinon
+			affiche message d'erreur;
+		FinSi
+	FinPour
+Fin
+
+Fonction relierCasesMin(entier x, entier y, entier z, entier t) : entier
+Début
+	Si(TCase[x+y*taille_].valeur = Tcase[z+t*taille_].valeur) alors
+		entier compt ← 0;
+		entier caseImp[];
+		entier caseAct[];
+		entier caseWait[];
+
+		caseWait.ajouter(x+y*taille);
+		caseImp.ajouter(x+y*taille);
+
+		Tant que(caseWait.taille > 0) faire
+			caseAct.clear();
+			caseAct.ajouterAll(caseWait);
+			caseWait.Clear();
+			Pour a de 0 caseAct.taille faire
+
+				entier xTmp_ ← caseAct_.get(a)%taille_;
+				entier yTmp_ ← caseAct_.get(a)/taille_;
+
+				Si(distanceCases(xTmp, yTmp, z, t) = -1) alors
+					retourner compt;
+
+				Pour toutes les cases ‘c’ autour de la case actuelle faire
+
+					Si(c.valeur = 0) alors
+						Si(distanceCases(c.x, c.y, z, t) = 0) alors
+							retourner compt + 1;
+						Sinon si(non caseImp.contient(c)) alors
+							caseWait.ajouter(c);
+							caseImp.ajouter(c);
+						FinSi
+					Sinon si (c.valeur = TCase[x+y*taille_].valeur) alors
+						Si(non caseImp.contient(c) alors
+							caseAct.ajouter(c);
+							caseAct.ajouter(TComp[c].all);
+						FinSi
+					Sinon
+						Si(non caseImp.contient(c) alors
+							caseImp.ajouter(c);
+						FinSi
+					FinSi
+				FinPour
+			FinPour
+			compt  ← compt + 1;
+		FinTantque
+	Finsi
+	return -1;
+Fin
+								

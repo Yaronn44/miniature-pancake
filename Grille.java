@@ -68,7 +68,7 @@ class Grille extends JPanel {
 				nb2_ = (int)(Math.random() * taille_);
 
 				for (int j = 0; j < posBaseJ1_.size(); ++j) {
-					if (distanceCase(nb1_, nb2_, posBaseJ1_.get(j)%taille_, posBaseJ1_.get(j)/taille_) < distMin_) {
+					if (distanceCases(nb1_, nb2_, posBaseJ1_.get(j)%taille_, posBaseJ1_.get(j)/taille_) < distMin_) {
 						possible_ = false;
 						break;
 					}
@@ -97,7 +97,7 @@ class Grille extends JPanel {
 				nb2_ = (int)(Math.random() * taille_);
 
 				for (int j = 0; j < posBaseJ2_.size(); ++j) {
-					if (distanceCase(nb1_, nb2_, posBaseJ2_.get(j)%taille_, posBaseJ2_.get(j)/taille_) < distMin_) {
+					if (distanceCases(nb1_, nb2_, posBaseJ2_.get(j)%taille_, posBaseJ2_.get(j)/taille_) < distMin_) {
 						possible_ = false;
 						break;
 					}
@@ -245,6 +245,9 @@ class Grille extends JPanel {
 					int xtmp_ = caseAct_.get(a)%taille_;
 					int ytmp_ = caseAct_.get(a)/taille_;
 
+					if (distanceCases(xtmp_, ytmp_, z, t) == -1)
+						return compt_;
+
 					// Pour chaque case on attribu des valeurs différentes pour la double boucle à suivre afin d'éviter
 					// que le programme essaye d'effectuer ses test sur des cases extérieurs au tableau (-1 par exemple)
 					ArrayList<Integer> valDebArr_ = new ArrayList<Integer>();
@@ -253,15 +256,18 @@ class Grille extends JPanel {
 					for (int i = valDebArr_.get(1); i <= valDebArr_.get(3); ++i) {
 						for (int j = valDebArr_.get(0); j <= valDebArr_.get(2); ++j){
 
-							// Si c'est la case actuelle on la passe (aucun intérêt à la tester)
-							if (i == 0 && j == 0) 
+							// Si c'est la case actuelle on l'ajoute au tableau des cases impossibles
+							if (i == 0 && j == 0){
+								if (!caseImp_.contains((xtmp_+ytmp_*taille_))){
+									caseImp_.add((xtmp_+ytmp_*taille_));
+								}
 								continue;
-
+							}
 							// Si c'est une case blanche alors...
-							if (getVal(xtmp_+j, ytmp_+i) == 0){
+							else if (getVal(xtmp_+j, ytmp_+i) == 0){
 
 								// Si elle est adjacente à la case d'arriver on retourne le compt_eur+1
-								if (distanceCase(xtmp_+j, ytmp_+i, z, t) == 0)
+								if (distanceCases(xtmp_+j, ytmp_+i, z, t) == 0)
 										return ++compt_;
 
 								// Si elle n'appartient pas au cases imposibles on l'ajoute dans le tableau de case pour le tour suivant ainsi qu'au tableau de cases impossible_
@@ -277,74 +283,10 @@ class Grille extends JPanel {
 								// Si elle n'appartient pas aux cases impossibles alors...
 								if (!caseImp_.contains((xtmp_+j)+(ytmp_+i)*taille_)) {
 
-									ArrayList<Integer> tabComp_ = new ArrayList<Integer>();
-
 									// On ajoute d'en un tableau temporaires tous les éléments de la composante dont elle fait partie
 									int pereComp = getComp((xtmp_+j),(ytmp_+i));
-									tabComp_.addAll(classe_.getTousFils(pereComp%taille_, pereComp/taille_));
-									tabComp_.add(pereComp);
-
-									int xtmp2_ = 0;
-									int ytmp2_ = 0;
-
-									// On vérifie que la case d'arrivé n'appartient pas à la composante
-									for (int f = 0; f < tabComp_.size(); ++f) {
-
-										xtmp2_ = tabComp_.get(f)%taille_;
-										ytmp2_ = tabComp_.get(f)/taille_;
-
-										// Si c'est le cas on retourne le compt_eur
-										if (distanceCase(xtmp2_, ytmp2_, z, t) == -1)
-											return compt_;
-									}
-
-									// Sinon pour chaque case de la composante...
-									for (int f = 0; f < tabComp_.size(); ++f) {
-
-										xtmp2_ = tabComp_.get(f)%taille_;
-										ytmp2_ = tabComp_.get(f)/taille_;
-
-										// ...on attribu des valeurs différentes pour la double boucle à suivre afin d'éviter
-										// que le programme essaye d'effectuer ses test sur des cases extérieurs au tableau (-1 par exemple)
-										ArrayList<Integer> valDebArr2_ = new ArrayList<Integer>();
-										valDebArr2_ = xyDebArr(xtmp2_, ytmp2_);
-
-										// Double boucle qui permet de tester toutes les cases adjacentes à toutes les cases de la composante
-										for (int i2 = valDebArr2_.get(1); i2 <= valDebArr2_.get(3); ++i2) {
-											for (int j2 = valDebArr2_.get(0); j2 <= valDebArr2_.get(2); ++j2){
-
-												// Si ce n'est pas la case actuelle de la composante alors...
-												if (i2 != 0 || j2 != 0) {
-
-													// Si c'est une case blanche alors...
-													if (getVal(xtmp2_+j2, ytmp2_+i2) == 0){
-
-														// Si elle est adjacente à la case d'arriver on retourne le compt_eur+1
-														if(distanceCase(xtmp2_+j2, ytmp2_+i2, z, t) == 0)
-															return ++compt_;
-
-														// Sinon si elle n'appartient pas au cases imposibles on l'ajoute dans le tableau de case pour le tour suivant ainsi qu'au tableau de cases impossible_
-														if (!caseImp_.contains(((xtmp2_+j2)+(ytmp2_+i2)*taille_))){
-															caseWait_.add(((xtmp2_+j2)+(ytmp2_+i2)*taille_));
-															caseImp_.add(((xtmp2_+j2)+(ytmp2_+i2)*taille_));
-														}
-													}
-													// Sinon si c'est une case de couleur adverse on l'ajoute au tableau de case impossible (si elle n'y est pas déjà)
-													else if (getVal(xtmp2_+j2, ytmp2_+i2) != getVal(x, y)){
-
-														if (!caseImp_.contains(((xtmp_+j2)+(ytmp_+i2)*taille_)))
-															caseImp_.add(((xtmp2_+j2)+(ytmp2_+i2)*taille_));
-													}
-												}
-												// Sinon c'est la case actuelle de la composante donc on l'ajoute directement aux case impossibles
-												else{
-													if (!caseImp_.contains(((xtmp2_+j2)+(ytmp2_+i2)*taille_))){
-														caseImp_.add(((xtmp2_+j2)+(ytmp2_+i2)*taille_));
-													}
-												}
-											}
-										}
-									}
+									caseAct_.addAll(classe_.getTousFils(pereComp%taille_, pereComp/taille_));
+									caseAct_.add(pereComp);
 								}
 							}
 							//Sinon c'est une case de couleur adverse donc on l'ajoute au tableau des cases impossibles (si elle n'y est pas déjà)
@@ -355,16 +297,13 @@ class Grille extends JPanel {
 							}
 						}
 					}
-					// Si le tableau pour le tour suivant est vide c'est que la case est bloqué dans un coin, donc on l'ajoute au tableau des cases impossible_s
-					if (caseWait_.isEmpty()){
-						caseImp_.add((xtmp_+ytmp_*taille_));
-					}
+			
 				}
-				// Pour finir on incrémente le compt_eur à la fin du tour
+				// Pour finir on incrémente le compteur à la fin du tour
 				++compt_;
 			}
 		}
-		// Sinon les deux cases ne sont pas de la même couleur, ou bien il n'y a pas de passage possible_ entre les deux cases donc on retourne -1
+		// Sinon les deux cases ne sont pas de la même couleur, ou bien il n'y a pas de passage possible entre les deux cases donc on retourne -1
 		return -1;
 	}
 	
@@ -397,36 +336,33 @@ class Grille extends JPanel {
 	public ArrayList<Integer> relieComposantes(int x, int y, int c){
 		
 		ArrayList<Integer> res_ = new ArrayList<Integer>();
-		if (getVal(x, y) == 0) {
+		// On attribu des valeurs différentes pour la double boucle à suivre afin d'éviter
+		// que le programme essaye d'effectuer ses test sur des cases extérieurs au tableau (-1 par exemple)
+		ArrayList<Integer> valXY_ = new ArrayList<Integer>();
+		valXY_ = xyDebArr(x, y);
 
-			// On attribu des valeurs différentes pour la double boucle à suivre afin d'éviter
-			// que le programme essaye d'effectuer ses test sur des cases extérieurs au tableau (-1 par exemple)
-			ArrayList<Integer> valXY_ = new ArrayList<Integer>();
-			valXY_ = xyDebArr(x, y);
+		// Double boucle qui permet de tester toutes les cases adjacentes la case actuelle
+		for (int k = valXY_.get(1); k <=  valXY_.get(3); ++k) {
+			for (int l =  valXY_.get(0); l <=  valXY_.get(2);  ++l) {
 
-			// Double boucle qui permet de tester toutes les cases adjacentes la case actuelle
-			for (int k = valXY_.get(1); k <=  valXY_.get(3); ++k) {
-				for (int l =  valXY_.get(0); l <=  valXY_.get(2);  ++l) {
+				// Si c'est la case actuelle on la passe (aucun intérêt à la tester)
+				if (k == 0 && l == 0) 		
+					continue;
 
-					// Si c'est la case actuelle on la passe (aucun intérêt à la tester)
-					if (k == 0 && l == 0) 		
-						continue;
+				// Si la case adjacente est de la même couleur que la case actuelle et que l'ArrayList temporaire est vide, on ajoute la classe de la case adjacente dans l'ArrayList
+				if (getVal(x+l, y+k) == c){
 
-					// Si la case adjacente est de la même couleur que la case actuelle et que l'ArrayList temporaire est vide, on ajoute la classe de la case adjacente dans l'ArrayList
-					if (getVal(x+l, y+k) == c){
+					boolean newComp_ = true;
+					// ... pour toutes les valeur de tmp_...
+					for (int i = 0; i < res_.size(); ++i) {
 
-						boolean newComp_ = true;
-						// ... pour toutes les valeur de tmp_...
-						for (int i = 0; i < res_.size(); ++i) {
-
-							// ... on test si la classe de la case adjacente n'est pas déjà dedans, si ce n'est pas le cas on incrément le compt_eur et on ajoute sa classe dans tmp_
-							if (existeCheminCases(x+l, y+k, res_.get(i)%taille_, res_.get(i)/taille_)){
-								newComp_ = false;
-							}
+						// ... on test si la classe de la case adjacente n'est pas déjà dedans, si ce n'est pas le cas on incrément le compt_eur et on ajoute sa classe dans tmp_
+						if (existeCheminCases(x+l, y+k, res_.get(i)%taille_, res_.get(i)/taille_)){
+							newComp_ = false;
 						}
-						if (newComp_) {
-							res_.add((x+l)+(y+k)*taille_);
-						}
+					}
+					if (newComp_) {
+						res_.add((x+l)+(y+k)*taille_);
 					}
 				}
 			}
@@ -444,13 +380,13 @@ class Grille extends JPanel {
 			if(getVal(x, y) != 0)
 				return taille_;
 			else
-				return distanceCase(x, y, xCentreJ1_, yCentreJ1_);
+				return distanceCases(x, y, xCentreJ1_, yCentreJ1_);
 		}
 		else if(j == 2){
 			if(getVal(x, y) != 0)
 				return taille_;
 			else
-				return distanceCase(x, y, xCentreJ2_, yCentreJ2_);
+				return distanceCases(x, y, xCentreJ2_, yCentreJ2_);
 		}
 		return taille_;
 	}
@@ -466,7 +402,7 @@ class Grille extends JPanel {
 
 
 	//!\ Retourne la distance entre deux cases (non comprises)
-	public int distanceCase(int x, int y, int z, int t){
+	public int distanceCases(int x, int y, int z, int t){
 
 		int tmp_1 = Math.abs(x-z);
 		int tmp_2 = Math.abs(y-t);
