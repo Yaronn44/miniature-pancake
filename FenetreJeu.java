@@ -68,7 +68,7 @@ class FenetreJeu extends JFrame{
 		b3_ = new JButton("Relie Case Min");
 		b4_ = new JButton("Nombre d'étoiles");
 		b5_ = new JButton("Relie Composante");
-		b6_ = new JButton("evaluer_ Case 1");
+		b6_ = new JButton("evaluer Case 1");
 		b7_ = new JButton("Abandon");
 
 		//------------------------------------------------------------------- Bouton pour afficheComposante
