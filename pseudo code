@@ -11,6 +11,7 @@ Début
 			finPour
 			Pause de 1 sec;
 		FinPour
+	FinSi
 Fin
 
 
@@ -42,20 +43,24 @@ Fin
 
 
 
-Fonction nombreEtoiles(entier x, entier y) : entier
+Fonction relieComposantes(entier x, entier y, entier coul) : entier []
 Début
-	entier compt ← 0;
-	entier tmp[];
-	tmp.ajouter( TComp[x+y*taille_].all);
-
-	Pour i de 0 à tmp.taille-1 faire
-		Si(TCase[tmp[i]].estBase) alors
-			compt ← compt +1;
-		Finsi		
+	entier res[];
+	Pour chaque case 'c' autour de la case de coordonnées (x,y) faire
+		Si(c.valeur = coul) alors
+			booléen newComp ← vrai;	
+			Pour i de 0 à res.taille-1 faire
+				Si(TComp[c] = Tcomp[res[i]]) alors
+					newComp ← faux;
+				FinSi
+			FinPour
+			Si(newComp) alors
+				res.ajouter(c) ;
+			FinSi
+		FinSi
 	FinPour
-	retourner compt;
+	retourner res ;
 Fin
-
 
 Fonction nombreEtoiles(entier x, entier y) : entier
 Début
